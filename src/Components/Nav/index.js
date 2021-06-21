@@ -58,7 +58,7 @@ linker:{
 
 // withStyles(styles)
 
-export default function Nav(props) {
+export default function Nav() {
 
     const [anchorEl, setAnchor] = useState(null);
 
@@ -78,7 +78,7 @@ export default function Nav(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" color="default" className={classes.AppBar}>
+            <AppBar position="absolute" color="default" className={classes.AppBar}>
                 <Grid item sm={12} xs={12} className={classes.container}>
                     <Toolbar>
                         <Grid className={classes.grow}>

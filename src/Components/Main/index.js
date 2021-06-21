@@ -1,14 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Divider, Typography } from '@material-ui/core/';
+import { Divider } from '@material-ui/core/';
 import JobCard from '../JobCard';
 import Hero from "../Hero"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    display:"flex",
-    alignItems:"center"
+    display: "flex",
+    alignItems: "center",
+    marginTop:"5em"
   },
   paper: {
     padding: theme.spacing(2),
@@ -28,10 +29,8 @@ export default function FullWidthGrid() {
           <Hero />
           <Divider />
         </Grid>
-        <Typography variant="h4">
-          Recent Job listings.
-        </Typography>
         <Divider />
+        <br />
         <JobCard />
       </Grid>
     </div>
