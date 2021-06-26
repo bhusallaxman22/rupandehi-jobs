@@ -4,7 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
-
+import Button from "@material-ui/core/Button"
+import { jobs } from './jobs';
+import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -18,9 +20,9 @@ const useStyles = makeStyles((theme) => ({
     width: 128,
     height: 128,
   },
-  text:{
-    textAlign:"center",
-    justifyContent:"center"
+  text: {
+    textAlign: "center",
+    justifyContent: "center"
   },
   img: {
     margin: 'auto',
@@ -28,6 +30,17 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     maxHeight: '100%',
   },
+  jobPaper: {
+    margin: "10px 10px 10px 10px"
+  },
+  linker: {
+    color: "inherit",
+    textDecoration: "none"
+
+  },
+  salary:{
+    color:"#4ee44e"
+  }
 }));
 
 export default function ComplexGrid() {
@@ -38,39 +51,55 @@ export default function ComplexGrid() {
       <Typography variant="h4" className={classes.text}>
         Recent Job listings.
       </Typography>
-      <Paper className={classes.paper}>
-        <Grid container spacing={2}>
-          <Grid item>
-            <ButtonBase className={classes.image}>
-              <img className={classes.img} alt="complex" src="/static/images/grid/complex.jpg" />
-            </ButtonBase>
-          </Grid>
-          <Grid item xs={12} sm container>
-            <Grid item xs container direction="column" spacing={2}>
-              <Grid item xs>
-                <Typography gutterBottom variant="subtitle1">
-                  Standard license
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Full resolution 1920x1080 • JPEG
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  ID: 1030114
-                </Typography>
+      <Grid container>
+        {
+          jobs.map(job => {
+            const name = job.name.replace(" ", "-").toLowerCase()
+            return (
+              <Grid item key={job.name} className={classes.jobPaper}>
+                <Paper className={classes.paper}>
+                  <Grid container spacing={2}>
+                    <Grid item>
+                      <ButtonBase className={classes.image}>
+                        <img className={classes.img} alt="complex" src={job.image} />
+                      </ButtonBase>
+                    </Grid>
+                    <Grid item xs={12} sm container>
+                      <Grid item xs container direction="column" spacing={2}>
+                        <Grid item xs>
+                          <Typography color="primary" gutterBottom variant="subtitle1">
+                            {job.name}
+                          </Typography>
+                          <Typography variant="body2" gutterBottom>
+                            {job.jobType}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            Level: {job.jobLevel}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Link className={classes.linker} to={`/jobs/${name}`}>
+                            <Button size="small"  color="secondary" variant="outlined" >
+                              View Job
+                            </Button>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body2" style={{ marginLeft: "5px" }} color="textSecondary">
+                          Salary:
+                        </Typography>
+                        <Typography variant="subtitle1" className={classes.salary}>{job.salary}</Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Paper>
               </Grid>
-              <Grid item>
-                <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                  Remove
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Typography variant="subtitle1">$19.00</Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Paper>
-      
+            )
+          })
+        }
+      </Grid>
+
     </div>
   );
 }

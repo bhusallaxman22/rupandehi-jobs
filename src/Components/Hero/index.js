@@ -8,6 +8,7 @@ import SideCard from "./SideCard"
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        overflow:"hidden",
         height: "300px",
         background:`url("/assets/images/office2.jpg")`,
         margin: "20px 20px 20px 20px",
@@ -18,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
     text: {
         textAlign: "center",
         fontWeight:"bolder",
-        color:"light-blue"
     },
 
 }));
@@ -33,13 +33,13 @@ export default function Hero() {
                 <Grid container justify="center" alignItems="center" spacing={3}>
                     <Grid item>
                         <Grid item xs={12} >
-                            <Typography className={classes.text}>
+                            <Typography className={classes.text} color="secondary">
                                 We make your dream come true.</Typography>
                         </Grid>
-                        <Grid item xs={12} >
+                        <Grid item xs={10} >
                             <SearchBar />
                         </Grid></Grid>
-                    <Divider orientation="vertical" />
+                    <Divider  />
                     <Grid item xs={6} sm={2}>
                         <SideCard />
                     </Grid>

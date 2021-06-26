@@ -1,8 +1,14 @@
 import Main from "../Components/Main"
 import Login from "../Components/Login";
+import JobDescription from "../Components/JobDescription";
 import SignUp from "../Components/SignUp";
+import a404 from "../Components/a404";
+import Jobs from "../Components/Jobs";
+import GetInfo from "../Components/GetInfo"
+import EditInfo from "../Components/EditInfo"
 
 const routes = [
+
     {
         path: '/login',
         component: Login
@@ -12,9 +18,31 @@ const routes = [
         component: SignUp
     },
     {
+        path: '/jobs/:id',
+        component: JobDescription
+    },
+    {
+        path:"/jobs/",
+        component: Jobs
+    },
+    {
+        path: '/get-info',
+        component: GetInfo
+    },
+    {
+        path: '/edit-info',
+        component: EditInfo
+    },
+    {
         path: '/',
         component: Main
     },
+
+    {
+        path: '/**',
+        component: a404
+    },
+
 
 ]
 

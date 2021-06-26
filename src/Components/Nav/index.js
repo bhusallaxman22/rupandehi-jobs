@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useState } from "react";
 import { Link } from "react-router-dom"
 const styles = makeStyles({
-
+    root: {
+    },
     row: {
         flexGrow: 1
     },
@@ -20,8 +21,6 @@ const styles = makeStyles({
     },
 
     AppBar: {
-        //height:400,
-        //background: `url("http://lorempixel.com/1920/1080/nature") no-repeat center center`,
         backgroundColor: "#fff",
         backgroundSize: "cover"
     },
@@ -35,18 +34,19 @@ const styles = makeStyles({
 
     avatar: {
         height: "100%",
+        width: "90px",
         borderRadius: 0,
     },
-linker:{
-    color:"inherit",
-    textDecoration:"none"
-    
-},
+    linker: {
+        color: "inherit",
+        textDecoration: "none"
+
+    },
     loginButton: {
         background: "#e91e63",
         color: "#fff",
-        borderRadius: "25px",
-        padding: "0px 25px",
+        // borderRadius: "25px",
+        padding: "0px 25px 0px",
 
         '&:hover': {
             background: 'blue',
@@ -56,7 +56,6 @@ linker:{
 
 });
 
-// withStyles(styles)
 
 export default function Nav() {
 
@@ -73,7 +72,6 @@ export default function Nav() {
 
 
     const classes = styles();
-    // const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
     return (
@@ -82,10 +80,11 @@ export default function Nav() {
                 <Grid item sm={12} xs={12} className={classes.container}>
                     <Toolbar>
                         <Grid className={classes.grow}>
-                           <Link className={classes.linker} to={"/"}> <Button className={[classes.mainLogo]}>
-                                <Avatar src="https://uploads.codesandbox.io/uploads/user/3e41a372-fc65-4387-bca0-70a050914db8/VIR9-logo.jpg" className={classes.avatar} />
+                            <Link className={classes.linker} to={"/"}> <Button className={[classes.mainLogo]}>
+                                <Avatar src="/assets/images/rupandehi.jpg" className={classes.avatar} />
                             </Button></Link>
                         </Grid>
+                        <Button color="inherit" className={classes.buttonFontSize}>Training</Button>
                         <Button color="inherit" onClick={handleMenu} className={classes.buttonFontSize}>Discover</Button>
                         <Menu
                             id="menu-appbar"
@@ -101,11 +100,12 @@ export default function Nav() {
                             open={open}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleClose}>About Us</MenuItem>
+                            <MenuItem onClick={handleClose}>FAQs</MenuItem>
                         </Menu>
-                        <Button color="inherit" className={classes.buttonFontSize}>Training</Button>
-                        <Link to={"/login"} className={classes.linker} ><Button color="inherit" className={[classes.buttonFontSize, classes.loginButton]}>Login</Button> </Link >
+                        <Link to={"/login"} className={classes.linker} ><Button color="inherit" size="medium" className={[classes.buttonFontSize, classes.loginButton]}>Login</Button> </Link >
+                        <Link to={"/signup"} className={classes.linker} > <Button color="inherit" variant="outlined" className={classes.buttonFontSize}>Register</Button></Link>
+
                     </Toolbar>
                 </Grid>
             </AppBar>
