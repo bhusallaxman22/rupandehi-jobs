@@ -2,7 +2,7 @@
 import Nav from "./Components//Nav/nav";
 import routes from './config/routes.js';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
