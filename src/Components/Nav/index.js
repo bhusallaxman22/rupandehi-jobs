@@ -1,5 +1,6 @@
-import { Grid, Button, AppBar, Toolbar, MenuItem, Menu, Avatar } from "@material-ui/core"
+import { Grid, Button, AppBar, Toolbar, MenuItem, Menu, Avatar,useMediaQuery } from "@material-ui/core"
 import { makeStyles } from '@material-ui/core/styles';
+
 import { useState } from "react";
 import { Link } from "react-router-dom"
 const styles = makeStyles({
@@ -58,6 +59,7 @@ const styles = makeStyles({
 
 
 export default function Nav() {
+    // const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
     const [anchorEl, setAnchor] = useState(null);
 
@@ -84,8 +86,8 @@ export default function Nav() {
                                 <Avatar src="/assets/images/rupandehi.jpg" className={classes.avatar} />
                             </Button></Link>
                         </Grid>
-                        <Button color="inherit" className={classes.buttonFontSize}>Training</Button>
-                        <Button color="inherit" onClick={handleMenu} className={classes.buttonFontSize}>Discover</Button>
+                        <Menu color="inherit" className={classes.buttonFontSize}>Training</Menu>
+                        <Menu color="inherit" onClick={handleMenu} className={classes.buttonFontSize}>Discover</Menu>
                         <Menu
                             id="menu-appbar"
                             anchorEl={anchorEl}
