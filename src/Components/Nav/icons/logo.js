@@ -1,10 +1,8 @@
 import React from "react";
 
-const Logo = ({ name }) => {
+const Logo = () => {
 	return (
-		<svg name xmlns="http://www.w3.org/2000/svg" style={{ height: "auto", width: "120" }} viewBox="0 0 288.54 111.48">
-			<defs>
-			</defs>
+		<svg  xmlns="http://www.w3.org/2000/svg" style={{ height: "auto", width: "120" }} viewBox="0 0 288.54 111.48">
 			<g id="Layer_2" data-name="Layer 2">
 				<g id="Layer_1-2" data-name="Layer 1">
 					<g className="cls-1">

@@ -1,10 +1,8 @@
 //Applicant Profile with error handling done, CSS also...
 import React, { Component } from "react";
 import axios from "../axios/api";
-import Form from "react-bootstrap/Form";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap";
-import "bootstrap/dist/js/bootstrap.bundle";
+import { From } from "@material-ui/core";
+
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { getRating } from "../helpers/rating";

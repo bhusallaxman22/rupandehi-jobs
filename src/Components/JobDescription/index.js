@@ -6,13 +6,14 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { Box, Divider, Container, Button,Paper, TableContainer,Table,TableCell,TableRow, Link } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 const useStyles = makeStyles({
   root: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     placeItems: "center",
-    margin: "80px 20px 20px 20px",
+    margin: "85px 20px 20px 20px",
   },
   card: {
     margin:"20px"
@@ -28,6 +29,10 @@ export default function JobDescription() {
 
   return (
     <Box justifyContent="center" className={classes.root}>
+      <Helmet>
+        <title>{"Teacher"}</title>
+        <meta name="description" content="Job opening for 2 teacher. See more at Rupandehi Jobs" />
+      </Helmet>
       <Card className={classes.card}>
         <CardActionArea>
           <CardMedia
@@ -142,15 +147,16 @@ export default function JobDescription() {
                     </TableCell>
                   </TableRow>
                 </tbody></Table>
-              <div className="card-group">
-                <div className="card border-0">
-                  <div className="card-body p-2"><h6 className="mb-1">Other Specification
-                  </h6></div>
-                  <div className="card-text p-2">
-                    <p><strong>Requirements</strong></p>
-                    <ul>
-                      <li>Bachelor's Degree in related field</li
-                      ><li>2 years of experience.</li>
+              <CardContent className="card-group">
+                <Container className="card border-0">
+                  <CardContent className="card-body p-2"><Typography variant="h6" component={"strong"} className="mb-1">Other Specification
+                  </Typography></CardContent>
+                  <CardContent className="card-text p-2">
+                    <Container>
+                    <Typography><strong>Requirements</strong></Typography>
+                    <ul style={{listStyle:"inside"}}>
+                      <li>Bachelor's Degree in related field</li>
+                      <li>2 years of experience.</li>
                       <li>Thorough knowledge of teaching best practices</li>
                       <li>Willingness to follow the school’s policies and procedures</li>
                       <li>Excellent spoken and written command in English</li>
@@ -159,9 +165,11 @@ export default function JobDescription() {
                       <li>Creative and energetic</li>
                     </ul>
                     <span><strong>Salary</strong>: NO BAR for deserving candidate</span><br /><p></p>
-                  </div>
-                </div>
-              </div>
+                    </Container>
+                  </CardContent>
+
+                </Container>
+              </CardContent>
             </CardContent>
           </Container>
         </CardContent>
@@ -170,9 +178,9 @@ export default function JobDescription() {
 
         <CardContent className="card-group">
           <Container className="card border-0">
-            <CardContent className="card-body p-2"><Typography variant="h5" component="strong"> Job Description</Typography>
+            <CardContent className="card-body p-2"><Typography variant="h6" component="p"> Job Description</Typography>
               <Container className="card-text p-2" itemProp="description">
-                <ul>
+                <ul style={{listStyle:"inside"}}> 
                   <li><Typography variant="body1" component="span">Create conducive learning environment in the classroom with proper classroom management</Typography></li>
                   <li><Typography component="span">Prepare and deliver lessons to classes of different ages and abilities</Typography></li>
                   <li><Typography component="span"> Help students develop social skills for their meaningful existence in the society</Typography></li>

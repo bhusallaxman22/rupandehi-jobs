@@ -1,4 +1,4 @@
-// import { Container } from "@material-ui/core"
+import { useMemo } from "react"
 import Nav from "./Components//Nav/nav";
 import routes from './config/routes.js';
 import {
@@ -9,12 +9,46 @@ import {
 import Footer from "./Components/Footer";
 import { GlobalStyle } from "./Components/Nav/styles";
 import MainState  from "./Components/Nav/context/mainState";
+import { makeStyles,CssBaseline,useMediaQuery } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 
+
+const useStyle = makeStyles({
+  root:{
+    minHeight:"100%",
+    display:"flex",
+    flexDirection:"column",
+    marginBottom: "-50px",
+
+
+  },
+  footer:{
+    marginTop:"auto",
+    alignSelf:"flex-end",
+    height: "50px",
+
+  }
+})
 function App() {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const classes= useStyle()
+  const theme = useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          type: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
+
   return (
     <Router>
+      <ThemeProvider theme={theme}>
+      <CssBaseline />
         <GlobalStyle />
-      <MainState>
+      <MainState className={classes.root}>
       <Nav />
       <Switch>
         {routes.map((route) => (
@@ -26,8 +60,9 @@ function App() {
           />
         ))}
       </Switch>
-      <Footer />
+      <Footer className={classes.footer} />
       </MainState>
+      </ThemeProvider>
     </Router>
   );
 }

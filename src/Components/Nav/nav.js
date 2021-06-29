@@ -112,7 +112,7 @@ const Nav = () => {
   const ref = useRef(null);
 
   const navItems = items.map((item, index) => (
-    <NavItems setChecked={setChecked} checked ref={ref} key={index} item={item} />
+    <NavItems setChecked={setChecked}  key={index} item={item} />
   ));
 
   return (

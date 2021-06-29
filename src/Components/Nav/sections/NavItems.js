@@ -34,7 +34,7 @@ const NavItems = ({ item,setChecked }) => {
   const router = useHistory()
   return (
     <StyledContainer>
-      <StyledItem onClick={()=>  {router.push(item.link);setChecked(false);}} >{item.name}</StyledItem>
+      <StyledItem onClick={()=>  {setChecked(false);router.push(item.link);}} >{item.name}</StyledItem>
     </StyledContainer>
   );
 };
