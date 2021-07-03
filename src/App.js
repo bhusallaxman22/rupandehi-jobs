@@ -46,11 +46,9 @@ function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-
       <CssBaseline />
-      <Paper>
-
-      <MainState className={classes.root}>
+      <Paper className={classes.root} >
+      <MainState >
       <Nav />
       <Switch>
         {routes.map((route) => (
@@ -65,7 +63,6 @@ function App() {
       <Footer className={classes.footer} />
       </MainState>
       </Paper>
-
       </ThemeProvider>
     </Router>
   );

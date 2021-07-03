@@ -1,5 +1,5 @@
 import { Paper, Box, makeStyles, Typography } from "@material-ui/core";
-import { useEffect, } from "react";
+import { useEffect,useState } from "react";
 import "./index.css";
 import axios from "axios";
 const useStyle = makeStyles({
@@ -10,23 +10,31 @@ const useStyle = makeStyles({
 });
 export default function Profile() {
   const classes = useStyle();
+  // const [email, setEmail] = useState("");
+  // const [name, setname] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [Contact, setContact] = useState("");
+  const [dp, setDp] = useState("");
+  const [edu, setEdu] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const [user, setUser] = useState([]);
 
   useEffect(() => {
-    if (localStorage.getItem("type") !== "A") window.location.href = "/404";
+    if ( localStorage.getItem("type") !== "A") window.location.href = "/#404";
     var config = {
       headers: {
         "x-auth-token": localStorage.getItem("token"),
       },
     };
     axios.get("/api/user/edu", config).then((res) => {
-      this.setState({ edus: res.data });
+      setEdu(res.data);
     });
     axios.get("/api/user/skills", config).then((res) => {
-      this.setState({ skills: res.data });
+      setSkills(res.data);
     });
     axios.get("/api/user/auth", config).then(async (res) => {
-      this.setState({ user: res.data });
-      if (this.state.user.dp) {
+      setUser(res.data);
+      if (user.dp) {
         try {
           const result = await axios.get(
             "/api/dp/download/" + localStorage.getItem("id"),
@@ -34,7 +42,7 @@ export default function Profile() {
               responseType: "blob",
             }
           );
-          this.setState({ dp: URL.createObjectURL(result.data) });
+          setDp(URL.createObjectURL(result.data));
         } catch (error) {
           if (error.response && error.response.status === 400) {
             alert("Error while downloading DP file. Try again later");
@@ -42,7 +50,8 @@ export default function Profile() {
         }
       }
     });
-  });
+    console.log(user)
+  },[user,dp,skills,edu]);
 
   return (
     <Box>

@@ -14,7 +14,7 @@ export default function A404() {
     const classes= useStyle()
     return (
         <Container justify="center" className={classes.root}>
-            <Typography variant="h4">
+            <Typography variant="h5">
                 Opps! you've wandered too far.
             </Typography>
             <Button href="/">Return Home</Button>

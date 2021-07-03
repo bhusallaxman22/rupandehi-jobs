@@ -13,6 +13,8 @@ import {
   Button,
 } from "@material-ui/core";
 import axios from "axios";
+import { School,RecentActors, TouchApp, Public, DynamicFeed } from "@material-ui/icons";
+import Settings from "@material-ui/icons/Settings";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -476,7 +478,7 @@ export default function EditProfile() {
   }
 
   useEffect(() => {
-    // if (localStorage.getItem("type") !== "A") window.location.href = "/#404";
+    if (localStorage.getItem("type") !== "A") window.location.href = "/#404";
     var config = {
       headers: {
         "x-auth-token": localStorage.getItem("token"),
@@ -518,12 +520,12 @@ export default function EditProfile() {
         aria-label="Edit Info"
         className={classes.tabs}
       >
-        <Tab dp={dp} label="Basic Info" {...a11yProps(0)} />
-        <Tab edu={edu} label="Education" {...a11yProps(1)} />
-        <Tab  label="Trainings" {...a11yProps(2)} />
-        <Tab skills={skills} label="Skills and Experience" {...a11yProps(3)} />
-        <Tab label="Social Accounts" {...a11yProps(4)} />
-        <Tab label="Other Info" {...a11yProps(5)} />
+        <Tab dp={dp} icon={<RecentActors/>} label={`Basic Info`} {...a11yProps(0)} />
+        <Tab icon={<School />} edu={edu} label="Education" {...a11yProps(1)} />
+        <Tab icon={<TouchApp />}  label="Trainings" {...a11yProps(2)} />
+        <Tab icon={<Settings />} skills={skills} label="Skills and Experience" {...a11yProps(3)} />
+        <Tab icon={<Public />} label="Social Accounts" {...a11yProps(4)} />
+        <Tab icon={<DynamicFeed />} label="Other Info" {...a11yProps(5)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <Typography component="h2" variant="strong">
