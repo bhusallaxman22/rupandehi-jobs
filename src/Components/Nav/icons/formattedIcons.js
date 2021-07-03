@@ -2,18 +2,18 @@ import React from "react";
 import {
   BgIntroDesktop,
   BgIntroMobile,
-  IconClose,
-  IconHamburger,
   Logo,
 } from "../icons";
+import IconClose from '@material-ui/icons/Close';
+import MenuIcon from "@material-ui/icons/Menu"
 
 const FormattedIcons = ({ name }) => {
   switch (name) {
-    case "BgIntroDesktop":
-      return <BgIntroDesktop />;
+    // case "BgIntroDesktop":
+    //   return <BgIntroDesktop />;
 
-    case "BgIntroMobile":
-      return <BgIntroMobile />;
+    // case "BgIntroMobile":
+    //   return <BgIntroMobile />;
 
 
     case "IconClose":
@@ -21,7 +21,7 @@ const FormattedIcons = ({ name }) => {
 
 
     case "IconHamburger":
-      return <IconHamburger />;
+      return <MenuIcon />;
 
 
     case "Logo":

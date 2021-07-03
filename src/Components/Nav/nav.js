@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef } from "react";
 import MainContext from "./context/mainContext";
-
+import GlobalStyle from "./styles/GlobalStyle"
 
 import styled from "styled-components";
 import {
@@ -10,12 +10,14 @@ import {
 import { theme, media, Button } from "./styles";
 import NavItems from "./sections/NavItems";
 import { Link } from "react-router-dom";
+import { Box, Container, Paper } from "@material-ui/core";
 
 const { colors } = theme;
-const StyledContainerMobile = styled.div`
-  background: ${colors.white};
+const StyledContainerMobile = styled(Paper)`
+  // background: ${colors.veryLightGray};
   width: 100%;
   position: fixed;
+  color:black;
   top: 0;
   z-index: 2;
   display: flex;
@@ -78,7 +80,7 @@ const StyledContentMenu = styled(StyledContainerMobile)`
 `;
 
 const StyledMenuMobile = styled.ul`
-  background: ${colors.white};
+  // background: ${colors.white};
   border-radius: 8px;
   text-decoration:none;
   padding-top: 0.5em;
@@ -116,7 +118,8 @@ const Nav = () => {
   ));
 
   return (
-    <>
+    <Box>
+      <GlobalStyle />
       <StyledContainerMobile>
         <FormattedIcons name={name} />
         <input
@@ -146,9 +149,9 @@ const Nav = () => {
         <Link to="/">
           <Logo name={name2} style={{ height: "inherit", width: "inherit" }} /></Link>
         <StyledMenuDesktop>{navItems}</StyledMenuDesktop>
-        <Link to="/signup">  <Button>Register</Button></Link>
+        <Link to="/signup">  <Button>Lets Go</Button></Link>
       </StyledContainerDesktop>
-    </>
+    </Box>
   );
 };
 

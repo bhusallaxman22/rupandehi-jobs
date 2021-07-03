@@ -1,26 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 import { theme } from "../styles";
-import {useHistory}  from "react-router-dom"
+import { useHistory } from "react-router-dom";
 
 const { colors } = theme;
 
 const StyledContainer = styled.li`
-display:block
+  display: block;
   text-align: center;
   margin: auto;
-  font-weight:600;
-
-
+  font-weight: 600;
 `;
 
 const StyledItem = styled.a`
-  color: ${colors.grayishBlue};
+  // color: ${colors.grayishBlue};
   padding: 1em;
   border-bottom: 5px solid transparent;
 
   &:hover {
-    text-decoration:none;
+    text-decoration: none;
     color: ${colors.darkBlue};
     border-image: linear-gradient(
         to right,
@@ -30,11 +28,18 @@ const StyledItem = styled.a`
       1;
   }
 `;
-const NavItems = ({ item,setChecked }) => {
-  const router = useHistory()
+const NavItems = ({ item, setChecked }) => {
+  const router = useHistory();
   return (
     <StyledContainer>
-      <StyledItem onClick={()=>  {setChecked(false);router.push(item.link);}} >{item.name}</StyledItem>
+      <StyledItem
+        onClick={() => {
+          setChecked(false);
+          router.push(item.link);
+        }}
+      >
+        {item.name}
+      </StyledItem>
     </StyledContainer>
   );
 };

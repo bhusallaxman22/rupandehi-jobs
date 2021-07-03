@@ -6,6 +6,7 @@ import a404 from "../Components/a404";
 import Jobs from "../Components/Jobs";
 import GetInfo from "../Components/GetInfo"
 import EditInfo from "../Components/EditInfo"
+import Profile from "../Components/Profile";
 // import ApplicantProfile from "../Components/ApplicantProfile"
 
 
@@ -35,10 +36,10 @@ const routes = [
         path: '/edit-info',
         component: EditInfo
     },
-    // {
-    //     path: '/profile',
-    //     component: ApplicantProfile
-    // },
+    {
+        path: '/profile',
+        component: Profile
+    },
     {
         path: '/',
         component: Main

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -8,13 +8,11 @@ import Box from "@material-ui/core/Box";
 import {
   TextField,
   Grid,
-  // FormControlLabel,
   Container,
   CssBaseline,
-  // Checkbox,
   Button,
 } from "@material-ui/core";
-
+import axios from "axios";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -27,7 +25,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <Box key={value} p={3}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -45,6 +43,7 @@ function a11yProps(index) {
   return {
     id: `vertical-tab-${index}`,
     "aria-controls": `vertical-tabpanel-${index}`,
+    key: { index },
   };
 }
 
@@ -54,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "80px",
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: "75vh",
+    minHeight: "75vh",
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
@@ -88,44 +87,52 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EditProfile() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [address, setAddredd] = useState("");
+  const [dob, setDob] = useState("");
+  const [bio, setBio] = useState("");
+  const [user, setUser] = useState({});
+  const [edu, setEdu] = useState([]);
+  const [insti, setInsti] = useState("");
+  const [starty, setStarty] = useState("");
+  const [endy, setEndy] = useState("");
+  const [cgpa, setCgpa] = useState("");
+  const [dp, setDp] = useState("");
+  // const [course, setCourse] = useState("");
+  // const [trainings, setTraning] = useState([]);
+  const [tinist, setTinist] = useState("");
+  const [tcourse, setTcourse] = useState("");
+  const [duration, setDuration] = useState("");
+  const [remark, setRemark] = useState("");
+  const [skills, setSkills] = useState([]);
+  const [skill, setSkill] = useState("");
+
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  // const [renderInfoForm, setInfoForm] = useState(false);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  function BasicInfo() {
+  const BasicInfo = () => {
     return (
       <div>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
-            <form className={classes.form}>
+            <form key={"form-1"} className={classes.form}>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <TextField
                     autoComplete="fname"
                     name="firstName"
                     variant="outlined"
-                    value={"Laxman"}
+                    value={name}
                     required
+                    onChange={(e) => setName(e.target.value)}
                     fullWidth
-                    id="firstName"
+                    id="standard-textarea"
                     label="First Name"
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    value={"Bhushal"}
-                    fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="lname"
                   />
                 </Grid>
                 <Grid item xs={12} sm={8}>
@@ -133,7 +140,9 @@ export default function EditProfile() {
                     variant="outlined"
                     required
                     fullWidth
-                    value={"laxmanbhusal612@gmail.com"}
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
                     id="email"
                     label="Email Address"
                     name="email"
@@ -145,7 +154,8 @@ export default function EditProfile() {
                     variant="outlined"
                     required
                     fullWidth
-                    value={"9823830282"}
+                    value={contact}
+                    onChange={(event) => setContact(event.target.value)}
                     id="contact"
                     label="Contact No."
                     name="contact"
@@ -157,7 +167,8 @@ export default function EditProfile() {
                     variant="outlined"
                     required
                     fullWidth
-                    value={"Siyari 06, Rupandehi, Nepal"}
+                    value={address}
+                    onChange={(event) => setAddredd(event.target.value)}
                     id="address"
                     label="Address"
                     name="address"
@@ -167,10 +178,26 @@ export default function EditProfile() {
                 <Grid item xs={12}>
                   <TextField
                     variant="outlined"
+                    multiline
+                    rows={4}
+                    required
+                    fullWidth
+                    type="email"
+                    value={bio}
+                    onChange={(event) => setBio(event.target.value)}
+                    id="bio"
+                    label="Bio"
+                    name="bio"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
                     required
                     focused
                     type="date"
-                    value={"2000-05-04"}
+                    value={dob}
+                    onChange={(event) => setDob(event.target.value)}
                     fullWidth
                     id="dob"
                     label="Date of Birth"
@@ -201,7 +228,7 @@ export default function EditProfile() {
         </Container>
       </div>
     );
-  }
+  };
   function Education() {
     return (
       <div>
@@ -215,19 +242,20 @@ export default function EditProfile() {
                     autoComplete=""
                     name="Institute"
                     variant="outlined"
-                    value={"Prasadi Academy"}
+                    value={insti}
+                    onChange={(event) => setInsti(event.target.value)}
                     required
                     fullWidth
                     id="institute"
                     label="Institute Name"
-                    autoFocus
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     required
-                    value={"2016"}
+                    value={starty}
+                    onChange={(event) => setStarty(event.target.value)}
                     fullWidth
                     id="syear"
                     label="Start Year"
@@ -239,7 +267,8 @@ export default function EditProfile() {
                     variant="outlined"
                     required
                     fullWidth
-                    value={"2018"}
+                    value={endy}
+                    onChange={(event) => setEndy(event.target.value)}
                     id="eyear"
                     label="End Year"
                     name="eyear"
@@ -250,7 +279,8 @@ export default function EditProfile() {
                     variant="outlined"
                     required
                     fullWidth
-                    value={"3.19"}
+                    value={cgpa}
+                    onChange={(event) => setCgpa(event.target.value)}
                     id="cgpa"
                     label="CGPA"
                     name="cgpa"
@@ -280,27 +310,203 @@ export default function EditProfile() {
       </div>
     );
   }
+  function Trainings() {
+    return (
+      <div>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <form className={classes.form}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    autoComplete=""
+                    name="Institute"
+                    variant="outlined"
+                    value={tinist}
+                    onChange={(e) => setTinist(e.target.value)}
+                    required
+                    fullWidth
+                    id="institute"
+                    label="Institute Name"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    value={tcourse}
+                    onChange={(e) => setTcourse(e.target.value)}
+                    fullWidth
+                    id="course-name"
+                    label="Course Name"
+                    name="course-name"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    id="course-duration"
+                    label="Course Duration"
+                    name="eyear"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    // required
+                    fullWidth
+                    value={remark}
+                    onChange={(e) => setRemark(e.target.value)}
+                    id="remarks"
+                    label="Remarks"
+                    name="remarks"
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Save
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                className={classes.submit}
+              >
+                Cancel
+              </Button>
+            </form>
+          </div>
+          <Box mt={5}></Box>
+        </Container>
+      </div>
+    );
+  }
   function SKillsExperience() {
     return (
       <div>
-        <h2>Education and Trainings</h2>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <form className={classes.form}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    autoComplete=""
+                    name="skill"
+                    variant="outlined"
+                    value={skill}
+                    onChange={(e) => setSkill(e.target.value)}
+                    required
+                    fullWidth
+                    id="skill"
+                    label="Your Skill"
+                  />
+                </Grid>
+                {/* <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="course-name"
+                    label="Course Name"
+                    name="course-name"
+                  />
+                </Grid> */}
+                {/*  <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    value={"3 months"}
+                    id="course-duration"
+                    label="Course Duration"
+                    name="eyear"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    // required
+                    fullWidth
+                    value={"Remarks"}
+                    id="remarks"
+                    label="Remarks"
+                    name="remarks"
+                  />
+                </Grid> */}
+              </Grid>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Save
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                className={classes.submit}
+              >
+                Cancel
+              </Button>
+            </form>
+          </div>
+          <Box mt={5}></Box>
+        </Container>
       </div>
     );
   }
   function SocialAccounts() {
-    return (
-      <div>
-        <h2>Social Accounts</h2>
-      </div>
-    );
+    return <div></div>;
   }
   function OtherInfo() {
-    return (
-      <div>
-        <h2>Other Infrmation</h2>
-      </div>
-    );
+    return <div></div>;
   }
+
+  useEffect(() => {
+    // if (localStorage.getItem("type") !== "A") window.location.href = "/#404";
+    var config = {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios.get("/api/user/edu", config).then((res) => {
+      setEdu(res.data);
+    });
+    axios.get("/api/user/skills", config).then((res) => {
+      setSkills(res.data);
+    });
+    axios.get("/api/user/auth", config).then(async (res) => {
+      setUser(res.data);
+      if (user.dp) {
+        try {
+          const result = await axios.get(
+            "/api/dp/download/" + localStorage.getItem("id"),
+            {
+              responseType: "blob",
+            }
+          );
+          setDp(URL.createObjectURL(result.data));
+        } catch (error) {
+          if (error.response && error.response.status === 400) {
+            alert("Error while downloading DP file. Try again later");
+          }
+        }
+      }
+    });
+  });
 
   return (
     <div className={classes.root}>
@@ -314,11 +520,10 @@ export default function EditProfile() {
       >
         <Tab label="Basic Info" {...a11yProps(0)} />
         <Tab label="Education" {...a11yProps(1)} />
-        <Tab label="Skills and Experience" {...a11yProps(2)} />
-        <Tab label="Social Accounts" {...a11yProps(3)} />
-        <Tab label="Other Info" {...a11yProps(4)} />
-        {/* <Tab label="Item Six" {...a11yProps(5)} />
-        <Tab label="Item Seven" {...a11yProps(6)} /> */}
+        <Tab label="Trainings" {...a11yProps(2)} />
+        <Tab label="Skills and Experience" {...a11yProps(3)} />
+        <Tab label="Social Accounts" {...a11yProps(4)} />
+        <Tab label="Other Info" {...a11yProps(5)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <Typography component="h2" variant="strong">
@@ -330,16 +535,31 @@ export default function EditProfile() {
         <Typography component="h2" variant="strong">
           Education
         </Typography>
-        <Education />
+        {Education()}
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <SKillsExperience />
+        <Typography component="h2" variant="strong">
+          Trainings
+        </Typography>
+        {Trainings()}
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <SocialAccounts />
+        <Typography component="h2" variant="strong">
+          Skills and Experience
+        </Typography>
+        {SKillsExperience()}
       </TabPanel>
       <TabPanel value={value} index={4}>
-        <OtherInfo />
+        <Typography component="h2" variant="strong">
+          Social Accounts
+        </Typography>
+        {SocialAccounts()}
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        <Typography component="h2" variant="strong">
+          Other Information
+        </Typography>
+        {OtherInfo()}
       </TabPanel>
     </div>
   );

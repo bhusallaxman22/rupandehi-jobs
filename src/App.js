@@ -7,9 +7,9 @@ import {
   Route,
 } from "react-router-dom";
 import Footer from "./Components/Footer";
-import { GlobalStyle } from "./Components/Nav/styles";
+// import { GlobalStyle } from "./Components/Nav/styles";
 import MainState  from "./Components/Nav/context/mainState";
-import { makeStyles,CssBaseline,useMediaQuery } from "@material-ui/core";
+import { makeStyles,CssBaseline,useMediaQuery,Paper } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 
 
@@ -46,8 +46,10 @@ function App() {
   return (
     <Router>
       <ThemeProvider theme={theme}>
+
       <CssBaseline />
-        <GlobalStyle />
+      <Paper>
+
       <MainState className={classes.root}>
       <Nav />
       <Switch>
@@ -62,6 +64,8 @@ function App() {
       </Switch>
       <Footer className={classes.footer} />
       </MainState>
+      </Paper>
+
       </ThemeProvider>
     </Router>
   );

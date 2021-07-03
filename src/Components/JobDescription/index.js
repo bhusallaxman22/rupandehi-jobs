@@ -30,7 +30,6 @@ export default function JobDescription() {
   return (
     <Box justifyContent="center" className={classes.root}>
       <Helmet>
-        <title>{"Teacher"}</title>
         <meta name="description" content="Job opening for 2 teacher. See more at Rupandehi Jobs" />
       </Helmet>
       <Card className={classes.card}>
@@ -53,12 +52,12 @@ export default function JobDescription() {
       </Card>
       <Box>
       <Card className={classes.card}>
-        <CardContent className="card-group">
-          <Container className="card border-0">
-            <CardContent className="card-header p-2"><Typography variant="h5" component="strong" >Basic Job Information</Typography></CardContent>
-            <CardContent className="card-body p-0 Table-responsive">
+        <CardContent >
+          <Container>
+            <CardContent><Typography variant="h5" component="strong" >Basic Job Information</Typography></CardContent>
+            <CardContent >
               <TableContainer component={Paper}>
-              <Table className="Table Table-hover Table-no-border m-0">
+              <Table >
                 <tbody><TableRow>
                   <TableCell width="33%">Job Category</TableCell>
                   <TableCell width="3%">:</TableCell>
@@ -89,7 +88,7 @@ export default function JobDescription() {
                     <TableCell>Job Location</TableCell>
                     <TableCell>:</TableCell>
                     <TableCell>
-                      <span className="clearfix">Kathmandu</span>
+                      <span >Kathmandu</span>
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -100,7 +99,7 @@ export default function JobDescription() {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Apply Before<span className="mx-2">(Deadline)</span></TableCell>
+                    <TableCell>Apply Before<span >(Deadline)</span></TableCell>
                     <TableCell>:</TableCell>
                     <TableCell>Jul. 05, 2021 23:55
                       (1&nbsp;week, 3&nbsp;days from now)
@@ -114,11 +113,11 @@ export default function JobDescription() {
         <Divider className="mt-0 mb-4" />
 
 
-        <CardContent className="card-group">
-          <Container className="card border-0">
-            <CardContent className="card-header p-2"> <Typography variant="h5" component="strong">Job Specification</Typography> </CardContent>
-            <CardContent className="card-body p-0 Table-responsive">
-              <Table className="Table Table-hover Table-no-border m-0">
+        <CardContent >
+          <Container >
+            <CardContent > <Typography variant="h5" component="strong">Job Specification</Typography> </CardContent>
+            <CardContent >
+              <Table>
                 <tbody><TableRow>
                   <TableCell width="33%">Education Level</TableCell>
                   <TableCell width="3%">:</TableCell>
@@ -137,21 +136,21 @@ export default function JobDescription() {
                     <TableCell width="33%">Professional Skill Required</TableCell>
                     <TableCell width="3%">:</TableCell>
                     <TableCell width="64%">
-                      <span itemProp="skills">
-                        <span className="badge badge-secondary">Interpersonal</span>
-                        <span className="badge badge-secondary">Leadership</span>
-                        <span className="badge badge-secondary">Communication</span>
-                        <span className="badge badge-secondary">Problem Solving</span>
-                        <span className="badge badge-secondary">Presentation</span>
-                      </span>
+                      <Typography variant="body1"  component="span" itemProp="skills">
+                        <Typography component="span" >Interpersonal </Typography>
+                        <Typography component="span" >Leadership </Typography>
+                        <Typography component="span">Communication </Typography>
+                        <Typography component="span" >Problem Solving </Typography>
+                        <Typography component="span" >Presentation </Typography>
+                      </Typography>
                     </TableCell>
                   </TableRow>
                 </tbody></Table>
-              <CardContent className="card-group">
-                <Container className="card border-0">
-                  <CardContent className="card-body p-2"><Typography variant="h6" component={"strong"} className="mb-1">Other Specification
+              <CardContent>
+                <Container >
+                  <CardContent><Typography variant="h6" component={"strong"}>Other Specification
                   </Typography></CardContent>
-                  <CardContent className="card-text p-2">
+                  <CardContent >
                     <Container>
                     <Typography><strong>Requirements</strong></Typography>
                     <ul style={{listStyle:"inside"}}>
@@ -173,13 +172,12 @@ export default function JobDescription() {
             </CardContent>
           </Container>
         </CardContent>
-        <Divider className="mt-0 mb-4" />
+        <Divider/>
 
-
-        <CardContent className="card-group">
-          <Container className="card border-0">
-            <CardContent className="card-body p-2"><Typography variant="h6" component="p"> Job Description</Typography>
-              <Container className="card-text p-2" itemProp="description">
+        <CardContent >
+          <Container >
+            <CardContent ><Typography variant="h6" component="p"> Job Description</Typography>
+              <Container itemProp="description">
                 <ul style={{listStyle:"inside"}}> 
                   <li><Typography variant="body1" component="span">Create conducive learning environment in the classroom with proper classroom management</Typography></li>
                   <li><Typography component="span">Prepare and deliver lessons to classes of different ages and abilities</Typography></li>
@@ -193,12 +191,12 @@ export default function JobDescription() {
               </Container>
             </CardContent>
           </Container>
-          <Divider className="mt-0 mb-4" />
+          <Divider />
 
 
-          <Container className="mt-3">
+          <Container>
             <Button variant="contained" size="small" color="secondary">
-              <span className="icon-circle-add mr-2"></span>APPLY NOW
+              APPLY NOW
             </Button>
           </Container>
         </CardContent>
