@@ -1,5 +1,5 @@
 import { Paper, Box, makeStyles, Typography } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useEffect, } from "react";
 import "./index.css";
 import axios from "axios";
 const useStyle = makeStyles({

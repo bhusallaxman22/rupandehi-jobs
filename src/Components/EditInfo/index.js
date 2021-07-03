@@ -518,10 +518,10 @@ export default function EditProfile() {
         aria-label="Edit Info"
         className={classes.tabs}
       >
-        <Tab label="Basic Info" {...a11yProps(0)} />
-        <Tab label="Education" {...a11yProps(1)} />
-        <Tab label="Trainings" {...a11yProps(2)} />
-        <Tab label="Skills and Experience" {...a11yProps(3)} />
+        <Tab dp={dp} label="Basic Info" {...a11yProps(0)} />
+        <Tab edu={edu} label="Education" {...a11yProps(1)} />
+        <Tab  label="Trainings" {...a11yProps(2)} />
+        <Tab skills={skills} label="Skills and Experience" {...a11yProps(3)} />
         <Tab label="Social Accounts" {...a11yProps(4)} />
         <Tab label="Other Info" {...a11yProps(5)} />
       </Tabs>
@@ -529,7 +529,7 @@ export default function EditProfile() {
         <Typography component="h2" variant="strong">
           Basic Information
         </Typography>
-        <BasicInfo />
+        {BasicInfo()}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Typography component="h2" variant="strong">

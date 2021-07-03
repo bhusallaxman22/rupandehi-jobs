@@ -10,7 +10,7 @@ import {
 import { theme, media, Button } from "./styles";
 import NavItems from "./sections/NavItems";
 import { Link } from "react-router-dom";
-import { Box, Container, Paper } from "@material-ui/core";
+import { Box, Paper } from "@material-ui/core";
 
 const { colors } = theme;
 const StyledContainerMobile = styled(Paper)`

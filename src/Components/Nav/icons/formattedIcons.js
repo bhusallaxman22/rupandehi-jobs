@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  BgIntroDesktop,
-  BgIntroMobile,
   Logo,
 } from "../icons";
 import IconClose from '@material-ui/icons/Close';
@@ -9,13 +7,6 @@ import MenuIcon from "@material-ui/icons/Menu"
 
 const FormattedIcons = ({ name }) => {
   switch (name) {
-    // case "BgIntroDesktop":
-    //   return <BgIntroDesktop />;
-
-    // case "BgIntroMobile":
-    //   return <BgIntroMobile />;
-
-
     case "IconClose":
       return <IconClose />;
 
