@@ -87,7 +87,7 @@ export default function SignUp() {
     }
 
     const newUser = {
-      Name: fname + lname,
+      Name: fname + " " + lname,
       Email: email,
       type: "A",
       password: password,
@@ -202,10 +202,10 @@ export default function SignUp() {
                 fullWidth
                 value={password_r}
                 onChange={(e) => setPasswordR(e.target.value)}
-                name="password"
+                name="password_r"
                 label="Confirm Password"
                 type="password"
-                id="password"
+                id="password+r"
                 autoComplete="current-password"
               />
             </Grid>

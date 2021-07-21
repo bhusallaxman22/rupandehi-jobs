@@ -470,9 +470,6 @@ export default function EditProfile() {
       </div>
     );
   }
-  function SocialAccounts() {
-    return <div></div>;
-  }
   function OtherInfo() {
     return <div></div>;
   }
@@ -524,8 +521,8 @@ export default function EditProfile() {
         <Tab icon={<School />} edu={edu} label="Education" {...a11yProps(1)} />
         <Tab icon={<TouchApp />}  label="Trainings" {...a11yProps(2)} />
         <Tab icon={<Settings />} skills={skills} label="Skills and Experience" {...a11yProps(3)} />
-        <Tab icon={<Public />} label="Social Accounts" {...a11yProps(4)} />
-        <Tab icon={<DynamicFeed />} label="Other Info" {...a11yProps(5)} />
+        {/* <Tab icon={<Public />} label="Social Accounts" {...a11yProps(4)} /> */}
+        <Tab icon={<DynamicFeed />} label="Other Info" {...a11yProps(4)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <Typography component="h2" variant="strong">
@@ -551,12 +548,12 @@ export default function EditProfile() {
         </Typography>
         {SKillsExperience()}
       </TabPanel>
-      <TabPanel value={value} index={4}>
+      {/* <TabPanel value={value} index={4}>
         <Typography component="h2" variant="strong">
           Social Accounts
         </Typography>
         {SocialAccounts()}
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel value={value} index={5}>
         <Typography component="h2" variant="strong">
           Other Information

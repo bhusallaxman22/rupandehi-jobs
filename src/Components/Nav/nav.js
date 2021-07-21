@@ -1,12 +1,9 @@
 import React, { useContext, useState, useRef } from "react";
 import MainContext from "./context/mainContext";
-import GlobalStyle from "./styles/GlobalStyle"
+import GlobalStyle from "./styles/GlobalStyle";
 
 import styled from "styled-components";
-import {
-  FormattedIcons,
-  Logo
-} from "./icons";
+import { FormattedIcons, Logo } from "./icons";
 import { theme, media, Button } from "./styles";
 import NavItems from "./sections/NavItems";
 import { Link } from "react-router-dom";
@@ -17,7 +14,7 @@ const StyledContainerMobile = styled(Paper)`
   // background: ${colors.veryLightGray};
   width: 100%;
   position: fixed;
-  color:black;
+  color: black;
   top: 0;
   z-index: 2;
   display: flex;
@@ -82,7 +79,7 @@ const StyledContentMenu = styled(StyledContainerMobile)`
 const StyledMenuMobile = styled.ul`
   // background: ${colors.white};
   border-radius: 8px;
-  text-decoration:none;
+  text-decoration: none;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   width: 100%;
@@ -114,7 +111,7 @@ const Nav = () => {
   const ref = useRef(null);
 
   const navItems = items.map((item, index) => (
-    <NavItems setChecked={setChecked}  key={index} item={item} />
+    <NavItems setChecked={setChecked} key={index} item={item} />
   ));
 
   return (
@@ -141,15 +138,25 @@ const Nav = () => {
 
       {checked ? (
         <StyledContentMenu>
-          <StyledMenuMobile >{navItems}</StyledMenuMobile>
+          <StyledMenuMobile>
+            {navItems}
+            <Link to="/signup">
+              {" "}
+              <Button>Lets Go</Button>
+            </Link>
+          </StyledMenuMobile>
         </StyledContentMenu>
       ) : null}
 
       <StyledContainerDesktop>
         <Link to="/">
-          <Logo name={name2} style={{ height: "inherit", width: "inherit" }} /></Link>
+          <Logo name={name2} style={{ height: "inherit", width: "inherit" }} />
+        </Link>
         <StyledMenuDesktop>{navItems}</StyledMenuDesktop>
-        <Link to="/signup">  <Button>Lets Go</Button></Link>
+        <Link to="/signup">
+          {" "}
+          <Button>Lets Go</Button>
+        </Link>
       </StyledContainerDesktop>
     </Box>
   );

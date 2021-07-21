@@ -1,6 +1,6 @@
 import { Paper, Box, makeStyles, Typography } from "@material-ui/core";
-import { useEffect,useState } from "react";
-import "./index.css";
+import { useEffect, useState } from "react";
+import "./style.css";
 import axios from "axios";
 const useStyle = makeStyles({
   root: {
@@ -20,7 +20,7 @@ export default function Profile() {
   const [user, setUser] = useState([]);
 
   useEffect(() => {
-    if ( localStorage.getItem("type") !== "A") window.location.href = "/#404";
+    if (localStorage.getItem("type") !== "A") window.location.href = "/#404";
     var config = {
       headers: {
         "x-auth-token": localStorage.getItem("token"),
@@ -50,12 +50,16 @@ export default function Profile() {
         }
       }
     });
-    console.log(user)
-  },[user,dp,skills,edu]);
+
+}, [user.dp]);
+  console.log(user);
+  if(user.Bio ==="You can edit to add Bio!"||"Bio"){
+    window.location.href="/#/get-info"
+  }
 
   return (
     <Box>
-      <Paper main className={classes.root}>
+      <Paper main="true" className={classes.root}>
         <Typography variant={"h3"} component="strong">
           Profile
         </Typography>
@@ -70,17 +74,14 @@ export default function Profile() {
               />
             </div>
             <div className="col-md-9 pt-md-0 pt-2">
-              <h5 className="mt-0">Mr. Laxman Bhushal</h5>
+              <h5 className="mt-0">Mr. {user.Name}</h5>
               <div className="personal-info">
                 <span>Address: Kaushaltar</span>
                 <br />
-                <span>Phone: 9823830282</span>
+                <span>Phone: {user.Contact}</span>
                 <br />
                 <span>
-                  Email:{" "}
-                  <a href="mailto:laxmanbhusal612@gmail.com">
-                    laxmanbhusal612@gmail.com
-                  </a>
+                  Email: <a href={`${user.Email}`}>{user.Email}</a>
                 </span>
                 <br />
                 <span>Date of Birth: May 4, 2000</span>
@@ -96,10 +97,7 @@ export default function Profile() {
               <div className="dropdown-divider"></div>
               <div className="container">
                 <p className="word-wrap"></p>
-                <p>
-                  Grow as an individual and build team work skill. Use my
-                  knowledge to solve real-world problems.
-                </p>
+                <p>{user.Bio}</p>
                 <p></p>
               </div>
             </div>

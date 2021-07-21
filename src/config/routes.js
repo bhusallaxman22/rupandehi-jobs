@@ -7,6 +7,8 @@ import Jobs from "../Components/Jobs";
 import GetInfo from "../Components/GetInfo"
 import EditInfo from "../Components/EditInfo"
 import Profile from "../Components/Profile";
+import JobList from "../Components/JobList";
+import ApplicantList from "../Components/ApplicantList";
 // import ApplicantProfile from "../Components/ApplicantProfile"
 
 
@@ -40,6 +42,14 @@ const routes = [
         path: '/profile',
         component: Profile
     },
+       {
+        path: '/job-list',
+        component: JobList
+    },
+    {
+        path: '/appl',
+        component: ApplicantList
+    },
     {
         path: '/',
         component: Main
@@ -49,6 +59,7 @@ const routes = [
         path: '/**',
         component: a404
     },
+
 
 
 ]
