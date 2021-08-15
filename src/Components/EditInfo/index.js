@@ -17,7 +17,6 @@ import {
   School,
   RecentActors,
   TouchApp,
-  Public,
   DynamicFeed,
 } from "@material-ui/icons";
 import Settings from "@material-ui/icons/Settings";

@@ -1,5 +1,6 @@
 import { Paper, Box, makeStyles, Typography } from "@material-ui/core";
 import { useEffect, useState } from "react";
+import Moment from "react-moment";
 import "./style.css";
 import axios from "axios";
 const useStyle = makeStyles({
@@ -16,6 +17,7 @@ export default function Profile() {
   // const [Contact, setContact] = useState("");
   const [dp, setDp] = useState("");
   const [edu, setEdu] = useState([]);
+  const [traning, setTraning] = useState([]);
   const [skills, setSkills] = useState([]);
   const [user, setUser] = useState([]);
 
@@ -26,9 +28,7 @@ export default function Profile() {
         "x-auth-token": localStorage.getItem("token"),
       },
     };
-    axios.get("/api/user/edu", config).then((res) => {
-      setEdu(res.data);
-    });
+
     axios.get("/api/user/skills", config).then((res) => {
       setSkills(res.data);
     });
@@ -50,11 +50,19 @@ export default function Profile() {
         }
       }
     });
+    // get data from /api/user/edu and update the state
+    axios.get("/api/user/edu", config).then(async (res) => {
+      setEdu(res.data);
+    });
+    axios.get("/api/user/traning", config).then(async (res) => {
+      setTraning(res.data);
+    });
+  }, [user.dp]);
 
-}, [user.dp]);
   console.log(user);
-  if(user.Bio ==="You can edit to add Bio!"||"Bio"){
-    window.location.href="/#/get-info"
+  console.log(edu);
+  if (user.Bio === "You can edit to add Bio!" || "Bio") {
+    // window.location.href="/#/get-info"
   }
 
   return (
@@ -76,7 +84,7 @@ export default function Profile() {
             <div className="col-md-9 pt-md-0 pt-2">
               <h5 className="mt-0">Mr. {user.Name}</h5>
               <div className="personal-info">
-                <span>Address: Kaushaltar</span>
+                <span>Address: {user.Address}</span>
                 <br />
                 <span>Phone: {user.Contact}</span>
                 <br />
@@ -84,7 +92,12 @@ export default function Profile() {
                   Email: <a href={`${user.Email}`}>{user.Email}</a>
                 </span>
                 <br />
-                <span>Date of Birth: May 4, 2000</span>
+                <span>
+                  Date of Birth:{" "}
+                  <Moment format="MMM D, YYYY" withTitle>
+                    {user.dob}
+                  </Moment>{" "}
+                </span>
                 <br />
               </div>
             </div>
@@ -105,63 +118,55 @@ export default function Profile() {
               <h5>
                 <span className="icon-graduation mr-2"></span> Education
               </h5>
-              <div className="dropdown-divider"></div>
-              <div className="row pb-3">
-                <div className="col-md-3">
-                  <span className="icon-calendar mr-2"></span>
-                  Running
-                </div>
-                <div className="col-md-9">
-                  <h6>
-                    <span className="icon-circle-check mr-2"></span>(Bachelor) -
-                    Bsc. Csit
-                  </h6>
-                  <div>
-                    <span className="icon-building mr-2"></span>
-                    Bhaktapur Multiple Campus
-                    <span>, Tribhuvan University </span>
+              {edu.map((edu, i) => (
+                <div key={i}>
+                  <div className="dropdown-divider"></div>
+                  <div className="row pb-3">
+                    <div className="col-md-3">
+                      <span className="icon-calendar mr-2"></span>
+                      {edu.end_year}
+                    </div>
+                    <div className="col-md-9">
+                      <h6>
+                        <span className="icon-circle-check mr-2"></span>
+                        {`(${edu.level})`} -{edu.course}
+                      </h6>
+                      <div>
+                        <span className="icon-building mr-2"></span>
+                        {edu.institute}
+                        <span>, CGPA: {edu.cgpa} </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="row pb-3">
-                <div className="col-md-3">
-                  <span className="icon-calendar mr-2"></span>
-                  August, 2018
-                </div>
-                <div className="col-md-9">
-                  <h6>
-                    <span className="icon-circle-check mr-2"></span>
-                    (Intermediate) - Science CGPA 3.13
-                  </h6>
-                  <div>
-                    <span className="icon-building mr-2"></span>
-                    Prasadi Academy<span>, National Examination Board </span>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
             <div className="col-md-12 mt-3">
               <h5>
                 <span className="icon-training mr-2"></span>{" "}
                 Training/Certificates
               </h5>
-              <div className="dropdown-divider"></div>
-              <div className="row pb-3">
-                <div className="col-md-3">
-                  <span className="icon-calendar mr-2"></span>
-                  May, 2019 (3 Months )
-                </div>
-                <div className="col-md-9">
-                  <h6>
-                    <span className="icon-circle-check mr-2"></span>Full Stack
-                    Web Developer
-                  </h6>
-                  <div>
-                    <span className="icon-building mr-2"></span>
-                    Udemy
+              {traning.map((training, i) => (
+                <div key={i}>
+                  <div className="dropdown-divider"></div>
+                  <div className="row pb-3">
+                    <div className="col-md-3">
+                      <span className="icon-calendar mr-2"></span>
+                      {`${training.completion_date}`} {`(${training.duration})`}
+                    </div>
+                    <div className="col-md-9">
+                      <h6>
+                        <span className="icon-circle-check mr-2"></span>
+                        {training.course}
+                      </h6>
+                      <div>
+                        <span className="icon-building mr-2"></span>
+                        {training.institute}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
             <div className="col-md-12 mt-3">
               <h5>
@@ -247,69 +252,11 @@ export default function Profile() {
                   <h6>
                     <span className="icon-circle-check mr-2"></span>Skills
                   </h6>
-                  <span
-                    title="Technical"
-                    className="badge badge-secondary mr-1"
-                  >
-                    Technical
-                  </span>
-                  <span
-                    title="Verbal Communication"
-                    className="badge badge-secondary mr-1"
-                  >
-                    Verbal Communication
-                  </span>
-                  <span
-                    title="Critical Thinking"
-                    className="badge badge-secondary mr-1"
-                  >
-                    Critical Thinking
-                  </span>
-                  <span
-                    title="Javascript"
-                    className="badge badge-secondary mr-1"
-                  >
-                    Javascript
-                  </span>
-                  <span
-                    title="Problem Solving"
-                    className="badge badge-secondary mr-1"
-                  >
-                    Problem Solving
-                  </span>
-                  <span title="React" className="badge badge-secondary mr-1">
-                    React
-                  </span>
-                  <span
-                    title="React Native"
-                    className="badge badge-secondary mr-1"
-                  >
-                    React Native
-                  </span>
-                  <span title="Github" className="badge badge-secondary mr-1">
-                    Github
-                  </span>
-                  <span title="Git" className="badge badge-secondary mr-1">
-                    Git
-                  </span>
-                  <span title="Express" className="badge badge-secondary mr-1">
-                    Express
-                  </span>
-                  <span
-                    title="Web Scrapping"
-                    className="badge badge-secondary mr-1"
-                  >
-                    Web Scrapping
-                  </span>
-                  <span
-                    title="Website Development"
-                    className="badge badge-secondary mr-1"
-                  >
-                    Website Development
-                  </span>
-                  <span title="Css3" className="badge badge-secondary mr-1">
-                    Css3
-                  </span>
+                  {skills.map((skill, i) => (
+                    <span key={skill.id} className="badge badge-secondary mr-1">
+                      {skill.Name}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -322,27 +269,23 @@ export default function Profile() {
               <div className="row">
                 <div className="offset-md-3 col-md-9">
                   <span className="icon-circle-check mr-2"></span>
-                  Gender: Male
+                  Gender: {user.gender}
                 </div>
                 <div className="offset-md-3 col-md-9">
                   <span className="icon-circle-check mr-2"></span>
-                  Permanent Address: Siyari 06, Rupandehi
+                  Current Address: {user.Address}
                 </div>
                 <div className="offset-md-3 col-md-9">
                   <span className="icon-circle-check mr-2"></span>
-                  Current Address: Kaushaltar
+                  Marital Status: {user.marital_status}
                 </div>
                 <div className="offset-md-3 col-md-9">
                   <span className="icon-circle-check mr-2"></span>
-                  Marital Status: Unmarried
+                  Religion: {user.religion}
                 </div>
                 <div className="offset-md-3 col-md-9">
                   <span className="icon-circle-check mr-2"></span>
-                  Religion: Hinduism
-                </div>
-                <div className="offset-md-3 col-md-9">
-                  <span className="icon-circle-check mr-2"></span>
-                  Nationality: Nepali
+                  Nationality: {user.nationality}
                 </div>
               </div>
             </div>
