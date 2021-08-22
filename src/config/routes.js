@@ -8,6 +8,7 @@ import GetInfo from "../Components/GetInfo"
 import EditInfo from "../Components/EditInfo"
 import Profile from "../Components/Profile";
 import JobList from "../Components/JobList";
+import AddJob from "../Components/AddJob";
 import ApplicantList from "../Components/ApplicantList";
 // import ApplicantProfile from "../Components/ApplicantProfile"
 
@@ -49,6 +50,10 @@ const routes = [
     {
         path: '/appl',
         component: ApplicantList
+    },
+    {
+        path: '/add-job',
+        component: AddJob
     },
     {
         path: '/',

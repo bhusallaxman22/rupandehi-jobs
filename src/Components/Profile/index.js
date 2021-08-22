@@ -1,5 +1,6 @@
-import { Paper, Box, makeStyles, Typography } from "@material-ui/core";
+import { Paper, Box, makeStyles, Typography, Avatar } from "@material-ui/core";
 import { useEffect, useState } from "react";
+import Snack from "../common/snack";
 import Moment from "react-moment";
 import "./style.css";
 import axios from "axios";
@@ -8,19 +9,22 @@ const useStyle = makeStyles({
     marginTop: "80px",
     minHeight: "75vh",
   },
+  image: {
+    width: "100px",
+    height: "100px",
+  },
 });
 export default function Profile() {
   const classes = useStyle();
-  // const [email, setEmail] = useState("");
-  // const [name, setname] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [Contact, setContact] = useState("");
   const [dp, setDp] = useState("");
   const [edu, setEdu] = useState([]);
+  const [socials, setSocial] = useState([]);
   const [traning, setTraning] = useState([]);
   const [skills, setSkills] = useState([]);
   const [user, setUser] = useState([]);
-
+  const [open, setOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+  const [sever, setSever] = useState("");
   useEffect(() => {
     if (localStorage.getItem("type") !== "A") window.location.href = "/#404";
     var config = {
@@ -32,24 +36,38 @@ export default function Profile() {
     axios.get("/api/user/skills", config).then((res) => {
       setSkills(res.data);
     });
-    axios.get("/api/user/auth", config).then(async (res) => {
-      setUser(res.data);
-      if (user.dp) {
-        try {
-          const result = await axios.get(
-            "/api/dp/download/" + localStorage.getItem("id"),
-            {
-              responseType: "blob",
+    axios
+      .get("/api/user/auth", config)
+      .then(async (res) => {
+        setUser(res.data);
+        if (user.dp) {
+          try {
+            const result = await axios.get(
+              "/api/dp/download/" + localStorage.getItem("id"),
+              {
+                responseType: "blob",
+              }
+            );
+            setDp(URL.createObjectURL(result.data));
+          } catch (error) {
+            if (error.response && error.response.status === 400) {
+              alert("Error while downloading DP file. Try again later");
             }
-          );
-          setDp(URL.createObjectURL(result.data));
-        } catch (error) {
-          if (error.response && error.response.status === 400) {
-            alert("Error while downloading DP file. Try again later");
           }
         }
-      }
-    });
+      })
+      .catch((error) => {
+        if (error.response) {
+          setOpen(true);
+          setSnackMessage(error.response.data + " You'll Be logged out soon");
+          setSever("error");
+          setTimeout(() => {
+            localStorage.clear();
+            window.location.href = "/#login";
+          }, 6000);
+        }
+      });
+
     // get data from /api/user/edu and update the state
     axios.get("/api/user/edu", config).then(async (res) => {
       setEdu(res.data);
@@ -64,6 +82,13 @@ export default function Profile() {
   if (user.Bio === "You can edit to add Bio!" || "Bio") {
     // window.location.href="/#/get-info"
   }
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   return (
     <Box>
@@ -74,12 +99,11 @@ export default function Profile() {
         <div className="card-body">
           <div className="row pb-3">
             <div className="col-md-3 pt-md-0 pt-3">
-              <img
-                className="rounded-circle d-flex mr-3"
-                style={{ height: "100px", width: "100px" }}
-                src="https://www.kumarijob.com/new-assets/images/avatar_man.png"
-                alt="Profile"
-              />
+              <Avatar
+                src={dp}
+                className={classes.image}
+                alt={user.Name}
+              ></Avatar>
             </div>
             <div className="col-md-9 pt-md-0 pt-2">
               <h5 className="mt-0">Mr. {user.Name}</h5>
@@ -141,33 +165,36 @@ export default function Profile() {
                 </div>
               ))}
             </div>
-            <div className="col-md-12 mt-3">
-              <h5>
-                <span className="icon-training mr-2"></span>{" "}
-                Training/Certificates
-              </h5>
-              {traning.map((training, i) => (
-                <div key={i}>
-                  <div className="dropdown-divider"></div>
-                  <div className="row pb-3">
-                    <div className="col-md-3">
-                      <span className="icon-calendar mr-2"></span>
-                      {`${training.completion_date}`} {`(${training.duration})`}
-                    </div>
-                    <div className="col-md-9">
-                      <h6>
-                        <span className="icon-circle-check mr-2"></span>
-                        {training.course}
-                      </h6>
-                      <div>
-                        <span className="icon-building mr-2"></span>
-                        {training.institute}
+            {traning.length !== 0 ? (
+              <div className="col-md-12 mt-3">
+                <h5>
+                  <span className="icon-training mr-2"></span>{" "}
+                  Training/Certificates
+                </h5>
+                {traning.map((training, i) => (
+                  <div key={i}>
+                    <div className="dropdown-divider"></div>
+                    <div className="row pb-3">
+                      <div className="col-md-3">
+                        <span className="icon-calendar mr-2"></span>
+                        {`${training.completion_date}`}{" "}
+                        {`(${training.duration})`}
+                      </div>
+                      <div className="col-md-9">
+                        <h6>
+                          <span className="icon-circle-check mr-2"></span>
+                          {training.course}
+                        </h6>
+                        <div>
+                          <span className="icon-building mr-2"></span>
+                          {training.institute}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : null}
             <div className="col-md-12 mt-3">
               <h5>
                 <span className="icon-id-card mr-2"></span>
@@ -360,6 +387,12 @@ export default function Profile() {
             </div>
           </div>
         </div>
+        <Snack
+          handleClose={handleClose}
+          open={open}
+          message={snackMessage}
+          sever={sever}
+        />
       </Paper>
     </Box>
   );

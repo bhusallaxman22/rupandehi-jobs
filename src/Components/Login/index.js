@@ -184,13 +184,7 @@ export default function Login() {
               <Copyright />
             </Box>
           </form>
-          {/* <Container className={classes.snack}>
-            <Snackbar open={open} anchorOrigin={{vertical:"bottom",horizontal:"right"}} autoHideDuration={6000} onClose={handleClose}>
-              <Alert onClose={handleClose} severity={sever}>
-                {snackMessage}
-              </Alert>
-            </Snackbar>
-          </Container> */}
+  
           <Snack
             handleClose={handleClose}
             open={open}

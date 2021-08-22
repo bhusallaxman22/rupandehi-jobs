@@ -21,6 +21,7 @@ import {
   InputLabel,
   MenuItem,
   Paper,
+  Divider,
 } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip";
 import moment from "moment";
@@ -237,15 +238,12 @@ export default function GetInfo() {
   const [dob, setDob] = useState("");
   const [bio, setBio] = useState("");
   // const [trainings, setTraning] = useState([]);
-  const [tinist, setTinist] = useState("");
-  const [tcourse, setTcourse] = useState("");
-  const [duration, setDuration] = useState("");
   const [religion, setReligion] = useState("");
   const [nationality, setNationality] = useState("Nepali");
-  const [remark, setRemark] = useState("");
-  const [skills, setSkills] = useState([]);
   const [gender, setGender] = useState("");
   const [skill, setSkill] = useState([]);
+  const [special, setSpecial] = useState([]);
+
   const [marital_status, setMaritalStatus] = useState("Single");
   const [inputList, setInputList] = useState([
     { insti: "", starty: "", endy: "", cgpa: "", course: "", level: "" },
@@ -254,7 +252,8 @@ export default function GetInfo() {
     { insti: "", duration: "", complete_date: "", course: "", remark: "" },
   ]);
 
-  const [chipData, setChipData] = React.useState([""]);
+  const [chipData, setChipData] = React.useState([]);
+  const [chipData1, setChipData1] = React.useState([]);
 
   useEffect(() => {
     async function fetchUser() {
@@ -292,11 +291,18 @@ export default function GetInfo() {
       setGender(user.gender);
     }
   }, [user.Name]);
-  const handleChipData = () => {
+  const handleChipData = (e) => {
+    e.preventDefault();
     const newChip = [...chipData, skill];
     console.log(newChip);
     setChipData(newChip);
     setSkill("");
+  };
+  const handleChipData1 = () => {
+    const newChip = [...chipData1, special];
+    console.log(newChip);
+    setChipData1(newChip);
+    setSpecial("");
   };
 
   const handleSkillSubmit = () => {
@@ -312,6 +318,27 @@ export default function GetInfo() {
       };
       axios
         .post("/api/user/skills/add/", req, config)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          if (err.response.data) alert(err.response.data);
+        });
+    }
+  };
+  const handleSpecialSubmit = () => {
+    var config = {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    };
+    for (let index = 0; index < chipData1.length; index++) {
+      var req = {
+        uid: localStorage.getItem("id"),
+        Name: chipData1[index],
+      };
+      axios
+        .post("/api/user/special/add/", req, config)
         .then((response) => {
           console.log(response);
         })
@@ -364,6 +391,9 @@ export default function GetInfo() {
   const handleDelete = (chipToDelete) => () => {
     setChipData((chips) => chips.filter((chip) => chip !== chipToDelete));
   };
+  const handleDelete1 = (chipToDelete) => () => {
+    setChipData1((chips) => chips.filter((chip) => chip !== chipToDelete));
+  };
   const handleInputChange1 = (e, index) => {
     const { name, value } = e.target;
     const list = [...inputList2];
@@ -400,7 +430,6 @@ export default function GetInfo() {
         .then((response) => {
           if (response.status === 200) {
             console.log("Success");
-           
           } else {
             console.log("Error");
           }
@@ -925,32 +954,33 @@ export default function GetInfo() {
       <div>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
+          <Typography variant="h5">Skills</Typography>
           <div className={classes.paper}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={8}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  value={skill}
-                  onChange={(e) => setSkill(e.target.value)}
-                  id="skills"
-                  label="Add Skills"
-                  name="skills"
-                  onSubmit={() => handleChipData()}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  type="submit"
-                  variant="text"
-                  size="large"
-                  color="secondary"
-                  onClick={() => handleChipData()}
-                >
-                  Add
-                </Button>
-              </Grid>
+              <form onSubmit={(e) => handleChipData(e)}>
+                <Grid item xs={12} sm={8}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    value={skill}
+                    onChange={(e) => setSkill(e.target.value)}
+                    id="skills"
+                    label="Add Skills"
+                    name="skills"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="text"
+                    size="large"
+                    color="secondary"
+                  >
+                    Add
+                  </Button>
+                </Grid>
+              </form>
               <Grid item xs={12}>
                 <Paper component="ul" className={classes.chipp}>
                   {chipData.map((data) => (
@@ -965,7 +995,60 @@ export default function GetInfo() {
                 </Paper>
               </Grid>
               <Grid item xs={12}>
-                <Button onClick={() => handleSkillSubmit()}>Save</Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleSkillSubmit()}
+                >
+                  Save
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+          <Divider />
+          <Typography variant="h5">Specializations</Typography>
+          <div className={classes.paper}>
+            <Grid container spacing={2}>
+              <form onSubmit={handleChipData1}>
+                <Grid item xs={12} sm={8}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    value={special}
+                    onChange={(e) => setSpecial(e.target.value)}
+                    id="specialization"
+                    label="Add Specilization"
+                    name="skills"
+                    onSubmit={() => handleChipData1()}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    variant="text"
+                    size="large"
+                    color="secondary"
+                    onClick={() => handleChipData1()}
+                  >
+                    Add
+                  </Button>
+                </Grid>
+              </form>
+              <Grid item xs={12}>
+                <Paper component="ul" className={classes.chipp}>
+                  {chipData1.map((data) => (
+                    <li key={Math.random() * 56842555 + data}>
+                      <Chip
+                        label={data}
+                        onDelete={handleDelete1(data)}
+                        className={classes.chip}
+                      />
+                    </li>
+                  ))}
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Button onClick={() => handleSpecialSubmit()}>Save</Button>
               </Grid>
             </Grid>
           </div>
