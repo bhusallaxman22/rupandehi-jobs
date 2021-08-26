@@ -1,207 +1,518 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
-import { Box, Divider, Container, Button,Paper, TableContainer,Table,TableCell,TableRow, Link } from '@material-ui/core';
-import { Helmet } from 'react-helmet';
+import React, { useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Typography from "@material-ui/core/Typography";
+import {
+  Box,
+  Divider,
+  Container,
+  Button,
+  Paper,
+  TableContainer,
+  Table,
+  TableCell,
+  TableRow,
+  Link,
+  Grid,
+  CircularProgress,
+} from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { Helmet } from "react-helmet";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import Moment from "react-moment";
+import Snack from "../common/snack";
+
 const useStyles = makeStyles({
   root: {
     display: "flex",
+    minHeight: "70vh",
     flexDirection: "column",
     justifyContent: "center",
     placeItems: "center",
-    margin: "85px 20px 20px 20px",
+    margin: "20px 20px 20px 20px",
   },
   card: {
-    margin:"20px"
+    margin: "20px",
   },
   media: {
     height: 140,
   },
-
 });
 
 export default function JobDescription() {
   const classes = useStyles();
+  const params = useParams();
 
+  const [open1, setOpen1] = React.useState(false);
+  const [job, setJob] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const [snackMessage, setSnackMessage] = React.useState("");
+  const [sever, setSever] = React.useState("");
+  const [myApplications, setMyApplications] = React.useState([]);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    // fetch from server from route /api/list/:id
+    var config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    };
+
+    axios
+      .get(`/api/list/job/${params.id}`)
+      .then((res) => {
+        setJob(res.data);
+        setLoading(false);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        setError(true);
+        setLoading(false);
+      });
+    axios
+      .post("/api/appl/", { cond: { uid: localStorage.getItem("id") } }, config)
+      .then((res) => {
+        setMyApplications(res.data);
+      });
+  }, [params.id]);
+
+  const handleClickOpen = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+  function renderRequirement() {
+    return { __html: job.requirements };
+  }
+  function renderDescription() {
+    return { __html: job.description };
+  }
+  const handleApply = () => {
+    const req = {
+      rid: job.rid,
+      uid: localStorage.getItem("id"),
+      lid: job._id,
+      title: job.title,
+      name_r: "Rupandehi Job",
+      salary: job.salary,
+    };
+    console.clear();
+    console.log(req);
+    var config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios
+      .post("/api/appl/add", req, config)
+      .then((response) => {
+        console.log(response);
+        setSnackMessage("Application sent successfully");
+        setSever("success");
+        setOpen(true);
+        window.location.reload();
+      })
+      .catch((err) => {
+        if (err.response.data) {
+          setSnackMessage("Error Applying" + err.response.data);
+          setSever("error");
+          setOpen(true);
+        }
+      });
+    setOpen1(false);
+  };
+  const handleApplied = () => {
+    return myApplications.map((app) =>
+      app.lid === job._id ? (
+        <TableRow key={app._id}>
+          <TableCell>{app.title}</TableCell>
+          <TableCell>{app.name_r}</TableCell>
+          <TableCell>{app.salary}</TableCell>
+          <TableCell>
+            <Moment format="YYYY/MM/DD">{app.createdAt}</Moment>
+          </TableCell>
+        </TableRow>
+      ) : null
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className={classes.root}>
+        <Grid
+          style={{
+            textAlign: "center",
+            justifyContent: "center",
+            placeItems: "center",
+          }}
+          container
+          spacing={3}
+        >
+          <Grid item xs={12}>
+            <Paper className={classes.paper} style={{ width: "250px" }}>
+              <Typography variant="h5" component="h3">
+                Loading...
+              </Typography>
+            </Paper>
+            <Grid item xs={12}>
+              <Typography variant="h5" component="h3">
+                <CircularProgress />
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className={classes.root}>
+        <Grid
+          style={{
+            textAlign: "center",
+            justifyContent: "center",
+            placeItems: "center",
+          }}
+          container
+          spacing={3}
+        >
+          <Grid item xs={12}>
+            <Paper className={classes.paper} style={{ width: "250px" }}>
+              <Typography variant="h5" component="h3">
+                Error Getting Job
+              </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
+      </div>
+    );
+  }
+
+  const RenderButton = () => {
+    if (myApplications.length > 0) {
+      for (let i = 0; i < myApplications.length; i++) {
+        if (myApplications[i].lid === job._id) {
+          return (
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: "10px" }}
+              onClick={handleApplied}
+            >
+              Applied
+            </Button>
+          );
+        }
+      }
+    }
+    return (
+      <Button
+        variant="contained"
+        color="secondary"
+        style={{ margin: "10px" }}
+        onClick={handleClickOpen}
+      >
+        Apply
+      </Button>
+    );
+  };
+  function FormDialog() {
+    return (
+      <div>
+        <Dialog
+          open={open1}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Application</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to apply for this job?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose1} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleApply} color="primary">
+              Apply
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
   return (
-    <Box justifyContent="center" className={classes.root}>
+    <>
       <Helmet>
-        <meta name="description" content="Job opening for 2 teacher. See more at Rupandehi Jobs" />
+        <meta
+          name="description"
+          content={
+            loading
+              ? "Rupandehi Job"
+              : `Job opening for ${job.title} for ${job.applicant_no} at Rupandehi Job`
+          }
+        />
+        <title> {!loading ? `${job.title}` : ""} - Rupandehi Job</title>
       </Helmet>
-      <Card className={classes.card}>
-        <CardActionArea>
-          <CardMedia
-            className={classes.media}
-            image="/assets/images/rupandehijob.jpg"
-            title="rupandehi job"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              A Reputed Company
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-              across all continents except Antarctica
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      <Box>
-      <Card className={classes.card}>
-        <CardContent >
-          <Container>
-            <CardContent><Typography variant="h5" component="strong" >Basic Job Information</Typography></CardContent>
-            <CardContent >
-              <TableContainer component={Paper}>
-              <Table >
-                <tbody><TableRow>
-                  <TableCell width="33%">Job Category</TableCell>
-                  <TableCell width="3%">:</TableCell>
-                  <TableCell width="64%">
-                    <Link href="/category/teaching-education/">Teaching / Education</Link>
-                  </TableCell>
-                </TableRow>
-                  <TableRow>
-                    <TableCell>Job Level</TableCell>
-                    <TableCell>:</TableCell>
-                    <TableCell><Link href="/job-level/mid_level/">
-                      Mid Level
-                    </Link></TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>No. of Vacancy/s</TableCell>
-                    <TableCell>:</TableCell>
-                    <TableCell>[ <strong>1</strong> ]</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Employment Type</TableCell>
-                    <TableCell>:</TableCell>
-                    <TableCell itemProp="employmentType">
-                      Full Time
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Job Location</TableCell>
-                    <TableCell>:</TableCell>
-                    <TableCell>
-                      <span >Kathmandu</span>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Offered Salary</TableCell>
-                    <TableCell>:</TableCell>
-                    <TableCell>
-                      Negotiable
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Apply Before<span >(Deadline)</span></TableCell>
-                    <TableCell>:</TableCell>
-                    <TableCell>Jul. 05, 2021 23:55
-                      (1&nbsp;week, 3&nbsp;days from now)
-                    </TableCell>
-                  </TableRow>
-                </tbody></Table>
-                </TableContainer>
+      <Box justifyContent="center" className={classes.root}>
+        <Card className={classes.card}>
+          <CardActionArea>
+            <CardMedia
+              className={classes.media}
+              image="/assets/images/rupandehijob.jpg"
+              title="rupandehi job"
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                A Reputed Company
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                Lizards are a widespread group of squamate reptiles, with over
+                6,000 species, ranging across all continents except Antarctica
+              </Typography>
             </CardContent>
-          </Container>
-        </CardContent>
-        <Divider className="mt-0 mb-4" />
-
-
-        <CardContent >
-          <Container >
-            <CardContent > <Typography variant="h5" component="strong">Job Specification</Typography> </CardContent>
-            <CardContent >
-              <Table>
-                <tbody><TableRow>
-                  <TableCell width="33%">Education Level</TableCell>
-                  <TableCell width="3%">:</TableCell>
-                  <TableCell width="64%">
-                    <span itemProp="educationRequirements">Bachelor</span>
-                  </TableCell>
-                </TableRow>
-                  <TableRow>
-                    <TableCell width="33%">Experience Required</TableCell>
-                    <TableCell width="3%">:</TableCell>
-                    <TableCell width="64%">
-                      <span itemProp="experienceRequirements">More than or equals to 2 years</span>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width="33%">Professional Skill Required</TableCell>
-                    <TableCell width="3%">:</TableCell>
-                    <TableCell width="64%">
-                      <Typography variant="body1"  component="span" itemProp="skills">
-                        <Typography component="span" >Interpersonal </Typography>
-                        <Typography component="span" >Leadership </Typography>
-                        <Typography component="span">Communication </Typography>
-                        <Typography component="span" >Problem Solving </Typography>
-                        <Typography component="span" >Presentation </Typography>
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                </tbody></Table>
-              <CardContent>
-                <Container >
-                  <CardContent><Typography variant="h6" component={"strong"}>Other Specification
-                  </Typography></CardContent>
-                  <CardContent >
-                    <Container>
-                    <Typography><strong>Requirements</strong></Typography>
-                    <ul style={{listStyle:"inside"}}>
-                      <li>Bachelor's Degree in related field</li>
-                      <li>2 years of experience.</li>
-                      <li>Thorough knowledge of teaching best practices</li>
-                      <li>Willingness to follow the school’s policies and procedures</li>
-                      <li>Excellent spoken and written command in English</li>
-                      <li>Excellent communicability and interpersonal skills</li>
-                      <li>Well-organized and committed</li>
-                      <li>Creative and energetic</li>
-                    </ul>
-                    <span><strong>Salary</strong>: NO BAR for deserving candidate</span><br /><p></p>
-                    </Container>
-                  </CardContent>
-
-                </Container>
-              </CardContent>
-            </CardContent>
-          </Container>
-        </CardContent>
-        <Divider/>
-
-        <CardContent >
-          <Container >
-            <CardContent ><Typography variant="h6" component="p"> Job Description</Typography>
-              <Container itemProp="description">
-                <ul style={{listStyle:"inside"}}> 
-                  <li><Typography variant="body1" component="span">Create conducive learning environment in the classroom with proper classroom management</Typography></li>
-                  <li><Typography component="span">Prepare and deliver lessons to classes of different ages and abilities</Typography></li>
-                  <li><Typography component="span"> Help students develop social skills for their meaningful existence in the society</Typography></li>
-                  <li><Typography component="span">Help students be familiar with national and international TableRowends/affairs according to their level</Typography></li>
-                  <li><Typography component="span">Motivate students for learning new things and shaping positive behaviour</Typography></li>
-                </ul>
-                <p><Typography component="strong">Applying Procedure:</Typography></p>
-                <p>Interested Candidates must send detailed CV with Cover letter to<strong>&nbsp;<Link href="mailto:info@maTableRowibhumischool.edu.np">info@maTableRowibhumischool.edu.np</Link></strong></p>
-                <p><strong>OR,</strong></p>
+          </CardActionArea>
+        </Card>
+        <Box>
+          <Card className={classes.card}>
+            <CardContent>
+              <Container>
+                <CardContent>
+                  <Typography variant="h5" component="strong">
+                    Basic Job Information
+                  </Typography>
+                  <Divider />
+                </CardContent>
+                <CardContent>
+                  <Typography variant="h6" color="secondary" component="p">
+                    {job.title}
+                  </Typography>
+                  {"\t \t \t"}
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    component="span"
+                  >
+                    Deadline:
+                    <Moment durationFromNow>{job.deadline}</Moment>
+                  </Typography>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <tbody>
+                        <TableRow>
+                          <TableCell width="33%">Job Category</TableCell>
+                          <TableCell width="3%">:</TableCell>
+                          <TableCell width="64%">
+                            <Link href="#">
+                              {job.category}
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Job Level</TableCell>
+                          <TableCell>:</TableCell>
+                          <TableCell>
+                            <Link href="/job-level/mid_level/">
+                              {job.level}
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>No. of Vacancy/s</TableCell>
+                          <TableCell>:</TableCell>
+                          <TableCell>
+                            [ <strong>{job.applicant_no}</strong> ]
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Employment Type</TableCell>
+                          <TableCell>:</TableCell>
+                          <TableCell itemProp="employmentType">
+                            {job.type}
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Job Location</TableCell>
+                          <TableCell>:</TableCell>
+                          <TableCell>
+                            <span>{job.job_location}</span>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Offered Salary</TableCell>
+                          <TableCell>:</TableCell>
+                          <TableCell>{job.salary}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            Apply Before<span>(Deadline)</span>
+                          </TableCell>
+                          <TableCell>:</TableCell>
+                          <TableCell>
+                            <Moment format="DD-MM-YYYY, hh:mm:ss">
+                              {job.deadline}
+                            </Moment>
+                            <Divider orientation="vertical" />
+                            <Moment durationFromNow>{job.deadline}</Moment>
+                          </TableCell>
+                        </TableRow>
+                      </tbody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
               </Container>
             </CardContent>
-          </Container>
-          <Divider />
+            <Divider className="mt-0 mb-4" />
 
+            <CardContent>
+              <Container>
+                <CardContent>
+                  {" "}
+                  <Typography variant="h5" component="strong">
+                    Job Specification
+                  </Typography>{" "}
+                </CardContent>
+                <CardContent>
+                  <Table>
+                    <tbody>
+                      <TableRow>
+                        <TableCell width="33%">Education Level</TableCell>
+                        <TableCell width="3%">:</TableCell>
+                        <TableCell width="64%">
+                          <span itemProp="educationRequirements">
+                            {job.edu_level}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell width="33%">Experience Required</TableCell>
+                        <TableCell width="3%">:</TableCell>
+                        <TableCell width="64%">
+                          <span itemProp="experienceRequirements">
+                            {job.experience}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell width="33%">
+                          Professional Skill Required
+                        </TableCell>
+                        <TableCell width="3%">:</TableCell>
+                        <TableCell width="64%">
+                          <Typography
+                            variant="body1"
+                            component="span"
+                            itemProp="skills"
+                          >
+                            {job.skills &&
+                              job.skills.map((skill) => (
+                                <span key={skill}>
+                                  <Typography
+                                    color="secondary"
+                                    variant="subtitle2"
+                                    component="span"
+                                  >
+                                    {skill}{" "}
+                                  </Typography>
+                                </span>
+                              ))}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </tbody>
+                  </Table>
+                  <CardContent>
+                    <Container>
+                      <CardContent>
+                        <Typography variant="h6" component={"strong"}>
+                          Other Specification
+                        </Typography>
+                      </CardContent>
+                      <CardContent>
+                          <Typography>
+                            <strong>Requirements</strong>
+                          </Typography>
+                            <div
+                              itemProp="requirements"
+                              dangerouslySetInnerHTML={renderRequirement()}
+                            />
+                      </CardContent>
+                    </Container>
+                  </CardContent>
+                </CardContent>
+              </Container>
+            </CardContent>
+            <Divider />
 
-          <Container>
-            <Button variant="contained" size="small" color="secondary">
-              APPLY NOW
-            </Button>
-          </Container>
-        </CardContent>
-      </Card>
+            <CardContent>
+              <Container>
+                <CardContent>
+                  <Typography variant="h6" component="p">
+                    {" "}
+                    Job Description
+                  </Typography>
+                  <Container itemProp="description">
+                    <div dangerouslySetInnerHTML={renderDescription()} />
+                    <p>
+                      <Typography component="strong">
+                        Applying Procedure:
+                      </Typography>
+                    </p>
+                    <Typography variant="subtitle1" component="strong">
+                      {job.apply_note}
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>OR,</strong>
+                    </Typography>
+                  </Container>
+                </CardContent>
+              </Container>
+              <Divider />
+              <Container>
+                {/* <Button
+                  variant="contained"
+                  size="small"
+                  color="secondary"
+                  onClick={() => handleClickOpen()}
+                >
+                  APPLY NOW
+                </Button> */}
+                <RenderButton />
+                <FormDialog />
+              </Container>
+            </CardContent>
+          </Card>
+        </Box>
       </Box>
-    </Box>
+      <Snack
+        open={open}
+        handleClose={handleClose}
+        sever={sever}
+        message={snackMessage}
+      />
+    </>
   );
 }

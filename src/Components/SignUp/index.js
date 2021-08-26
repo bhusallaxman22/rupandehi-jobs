@@ -15,6 +15,7 @@ import Container from "@material-ui/core/Container";
 import validator from "validator";
 import axios from "axios";
 import Snack from "../common/snack";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -101,7 +102,9 @@ export default function SignUp() {
         setOpen(true);
         setSnackMessage("Successfully Registered");
         setSever("success");
-        window.location.href = "/#login";
+        setTimeout(() => {
+          window.location.href = "/#login";
+        }, 3000);
       })
       .catch((err) => {
         if (err.response.data) {
@@ -113,134 +116,142 @@ export default function SignUp() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form onSubmit={onSubmit} className={classes.form}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                value={fname}
-                onChange={(e) => setFname(e.target.value)}
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                value={lname}
-                onChange={(e) => setLname(e.target.value)}
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                type="email"
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
+    <>
+      <Helmet>
+        <title>Sign Up - Rupandehi Job</title>
+        <meta name="description" content="Sign Up for rupandehi job" />
+      </Helmet>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form onSubmit={onSubmit} className={classes.form}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="fname"
+                  name="firstName"
+                  variant="outlined"
+                  required
+                  value={fname}
+                  onChange={(e) => setFname(e.target.value)}
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  value={lname}
+                  onChange={(e) => setLname(e.target.value)}
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="lname"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                value={Contact}
-                onChange={(e) => setContact(e.target.value)}
-                type="text"
-                id="contact"
-                label="Contact No."
-                name="email"
-                autoComplete="contact"
-              />
-            </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  value={Contact}
+                  onChange={(e) => setContact(e.target.value)}
+                  type="text"
+                  id="contact"
+                  label="Contact No."
+                  name="email"
+                  autoComplete="contact"
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  value={password_r}
+                  onChange={(e) => setPasswordR(e.target.value)}
+                  name="password_r"
+                  label="Confirm Password"
+                  type="password"
+                  id="password+r"
+                  autoComplete="current-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox value="allowExtraEmails" color="primary" />
+                  }
+                  label="I want to receive inspiration, marketing promotions and updates via email."
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                value={password_r}
-                onChange={(e) => setPasswordR(e.target.value)}
-                name="password_r"
-                label="Confirm Password"
-                type="password"
-                id="password+r"
-                autoComplete="current-password"
-              />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign Up
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link to="/login" className={classes.linker}>
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link to="/login" className={classes.linker}>
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-        <Snack
-          handleClose={handleClose}
-          open={open}
-          message={snackMessage}
-          sever={sever}
-        />
-      </div>
-      <Box mt={5}></Box>
-    </Container>
+          </form>
+          <Snack
+            handleClose={handleClose}
+            open={open}
+            message={snackMessage}
+            sever={sever}
+          />
+        </div>
+        <Box mt={5}></Box>
+      </Container>
+    </>
   );
 }

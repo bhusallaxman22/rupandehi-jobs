@@ -11,7 +11,6 @@ import { Box, Paper } from "@material-ui/core";
 
 const { colors } = theme;
 const StyledContainerMobile = styled(Paper)`
-  // background: ${colors.veryLightGray};
   width: 100%;
   position: fixed;
   color: black;

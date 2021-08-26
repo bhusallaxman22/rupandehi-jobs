@@ -24,9 +24,9 @@ import {
   Divider,
 } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip";
-import moment from "moment";
 import { FormControl } from "@material-ui/core";
 import { School, TouchApp, DynamicFeed } from "@material-ui/icons";
+import moment from "moment";
 import axios from "axios";
 const useQontoStepIconStyles = makeStyles({
   root: {
@@ -170,7 +170,8 @@ ColorlibStepIcon.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    marginTop: "80px",
+    marginTop: "20px",
+    minHeight: "70vh",
   },
   button: {
     marginRight: theme.spacing(1),
@@ -230,19 +231,18 @@ function getSteps() {
 export default function GetInfo() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [user, setUser] = React.useState({});
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
   const [dob, setDob] = useState("");
   const [bio, setBio] = useState("");
-  // const [trainings, setTraning] = useState([]);
   const [religion, setReligion] = useState("");
   const [nationality, setNationality] = useState("Nepali");
   const [gender, setGender] = useState("");
   const [skill, setSkill] = useState([]);
   const [special, setSpecial] = useState([]);
+  const [yoe, setYoe] = useState("");
 
   const [marital_status, setMaritalStatus] = useState("Single");
   const [inputList, setInputList] = useState([
@@ -256,41 +256,31 @@ export default function GetInfo() {
   const [chipData1, setChipData1] = React.useState([]);
 
   useEffect(() => {
-    async function fetchUser() {
-      const res = await fetch("/api/user/auth", {
-        method: "GET",
-        headers: {
-          "x-auth-token": localStorage.getItem("token"),
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+    // use axios to fetch data from the /api/user/auth route
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    };
+
+    axios
+      .get("/api/user/auth", config)
+      .then((res) => {
+        setName(res.data.Name);
+        setEmail(res.data.Email);
+        setContact(res.data.Contact);
+        setAddress(res.data.Address);
+        setDob(moment(res.data.dob).format("YYYY-MM-DD"));
+        setBio(res.data.Bio);
+        setReligion(res.data.religion);
+        setYoe(res.data.yoe);
+        setNationality(res.data.nationality);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      const data = await res.json();
-      setUser(data);
-    }
-    fetchUser();
-    console.log(user);
-    if (!user.Name == "" && !user.Email == "" && !user.Contact == "") {
-      setName(user.Name);
-      setEmail(user.Email);
-      setContact(user.Contact);
-    }
-    if (user.Address != "") {
-      setAddress(user.Address);
-    }
-    if (user.DOB != "") {
-      setDob(moment(user.dob).format("YYYY-MM-DD"));
-    }
-    if (user.Bio != "") {
-      setBio(user.Bio);
-    }
-    if (user.religion != "") {
-      setReligion(user.religion);
-    }
-    if (user.gender != "") {
-      setGender(user.gender);
-    }
-  }, [user.Name]);
+  }, []);
   const handleChipData = (e) => {
     e.preventDefault();
     const newChip = [...chipData, skill];
@@ -363,6 +353,7 @@ export default function GetInfo() {
       Contact: contact,
       Address: address,
       dob: dob,
+      yoe: yoe,
       Bio: bio,
       gender: gender,
       marital_status: marital_status,
@@ -373,7 +364,7 @@ export default function GetInfo() {
       .post("/api/user/profile", data, config)
       .then((res) => {
         console.log(res);
-        if (res.status == 200) {
+        if (res.status === 200) {
           setName("");
           setEmail("");
           setContact("");
@@ -381,6 +372,7 @@ export default function GetInfo() {
           setDob("");
           setBio("");
           setGender("");
+          setYoe("");
           setMaritalStatus("");
         }
       })
@@ -647,7 +639,7 @@ export default function GetInfo() {
                     rows={4}
                     required
                     fullWidth
-                    type="email"
+                    type="text"
                     value={bio}
                     onChange={(event) => setBio(event.target.value)}
                     id="bio"
@@ -655,7 +647,7 @@ export default function GetInfo() {
                     name="bio"
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={8}>
                   <TextField
                     variant="outlined"
                     required
@@ -670,7 +662,21 @@ export default function GetInfo() {
                     autoComplete="DOB"
                   />
                 </Grid>
-
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    focused
+                    type="number"
+                    value={yoe}
+                    onChange={(event) => setYoe(event.target.value)}
+                    fullWidth
+                    id="yoe"
+                    label="Years os work Experience"
+                    name="yoe"
+                    autoComplete="yoe"
+                  />
+                </Grid>
                 <Grid>
                   <Button
                     type="submit"

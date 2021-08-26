@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
+    search: {
         padding: '2px 4px',
         display: 'flex',
         alignItems: 'center',
@@ -25,7 +25,7 @@ export default function SearchBar() {
     const classes = useStyles();
 
     return (
-        <Paper component="form" className={classes.root}>
+        <Paper component="form" className={classes.search}>
             <InputBase
                 className={classes.input}
                 placeholder="Search for Jobs"

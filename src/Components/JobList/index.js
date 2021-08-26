@@ -14,57 +14,27 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 // import Checkbox from "@material-ui/core/Checkbox";
+import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Link } from "react-router-dom";
+import Moment from "react-moment";
 
-function createData(title, postedOn, applicants, accepted, deadline) {
-  const id = Math.random() + title;
+function createData(id, title, postedOn, applicants, accepted, deadline) {
   return { id, title, postedOn, applicants, accepted, deadline };
 }
 
-let rows = [
-  createData("Front Desk Officer", "28-02-2021", 5, 4, "21-04-2021"),
-  createData("Accountant", "28-02-2021", 5, 3, "28-06-2021"),
-  createData("Developer", "28-02-2021", 5, 8, "28-02-2021"),
-  createData("Software Engineer", "28-02-2021", 5, 9, "28-02-2021"),
-  createData("Receptionist", "28-02-2021", 5, 4, "28-02-2021"),
-  createData("Java Developer", "28-02-2021", 5, 2, "28-02-2021"),
-  createData("Marketing Officer", "28-02-2021", 5, 1, "28-02-2021"),
-  createData("Front Desk Officer", "28-02-2021", 5, 4, "21-04-2021"),
-  createData("Accountant", "28-02-2021", 5, 3, "28-06-2021"),
-  createData("Developer", "28-02-2021", 5, 8, "28-02-2021"),
-  createData("Software Engineer", "28-02-2021", 5, 9, "28-02-2021"),
-  createData("Receptionist", "28-02-2021", 5, 4, "28-02-2021"),
-  createData("Java Developer", "28-02-2021", 5, 2, "28-02-2021"),
-  createData("Marketing Officer", "28-02-2021", 5, 1, "28-02-2021"),
-  createData("Front Desk Officer", "28-02-2021", 5, 4, "21-04-2021"),
-  createData("Accountant", "28-02-2021", 5, 3, "28-06-2021"),
-  createData("Developer", "28-02-2021", 5, 8, "28-02-2021"),
-  createData("Software Engineer", "28-02-2021", 5, 9, "28-02-2021"),
-  createData("Receptionist", "28-02-2021", 5, 4, "28-02-2021"),
-  createData("Java Developer", "28-02-2021", 5, 2, "28-02-2021"),
-  createData("Marketing Officer", "28-02-2021", 5, 1, "28-02-2021"),
-  createData("Front Desk Officer", "28-02-2021", 5, 4, "21-04-2021"),
-  createData("Accountant", "28-02-2021", 5, 3, "28-06-2021"),
-  createData("Developer", "28-02-2021", 5, 8, "28-02-2021"),
-  createData("Software Engineer", "28-02-2021", 5, 9, "28-02-2021"),
-  createData("Receptionist", "28-02-2021", 5, 4, "28-02-2021"),
-  createData("Java Developer", "28-02-2021", 5, 2, "28-02-2021"),
-  createData("Marketing Officer", "28-02-2021", 5, 1, "28-02-2021"),
-  createData("Front Desk Officer", "28-02-2021", 5, 4, "21-04-2021"),
-  createData("Accountant", "28-02-2021", 5, 3, "28-06-2021"),
-  createData("Developer", "28-02-2021", 5, 8, "28-02-2021"),
-  createData("Software Engineer", "28-02-2021", 5, 9, "28-02-2021"),
-  createData("Receptionist", "28-02-2021", 5, 4, "28-02-2021"),
-  createData("Java Developer", "28-02-2021", 5, 2, "28-02-2021"),
-  createData("Marketing Officer", "28-02-2021", 5, 1, "28-02-2021"),
-];
+//
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -242,6 +212,7 @@ EnhancedTableToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    minHeight: "70vh",
     marginTop: "80px",
   },
   paper: {
@@ -278,13 +249,85 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [jobs, setJobs] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  React.useEffect(() => {
+    if (localStorage.getItem("type") !== "R") {
+      window.location.href = "/#404";
+    }
+    var config = {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    };
+    axios
+      .get("/api/list/rid", config)
+      .then((response) => {
+        setJobs(response.data);
+        console.log(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [jobs.rid]);
+
+  let rows = [
+    jobs.map((job) =>
+      createData(
+        job._id,
+        job.title,
+        job.postedOn,
+        job.curr_app,
+        job.accepted,
+        job.deadline
+      )
+    ),
+  ];
+  console.log("rows", rows);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
+  function AlertDialog({ row }) {
+    return (
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Are You Sure You want to Delete this Job?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              This will delete the job and all the applications associated with
+              it. This action cannot be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Disagree
+            </Button>
+            <Button onClick={() => onDeleteJob(row)} color="primary" autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
   // const handleSelectAllClick = (event) => {
   //   if (event.target.checked) {
   //     const newSelecteds = rows.map((n) => n.id);
@@ -331,51 +374,40 @@ export default function EnhancedTable() {
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-  React.useEffect(() => {
-    // if (localStorage.getItem("type") !== "R") {
-    //   window.location.href = "/404";
-    // }
-    // var config = {
-    //   headers: {
-    //     "x-auth-token": localStorage.getItem("token"),
-    //   },
-    // };
-    // axios
-    //   .get("/api/list/rid", config)
-    //   .then((response) => {
-    //     this.setState({ jobs: response.data });
-    //   })
-    //   .catch((err) => {
-    //     if (err.response.data) alert(err.response.data);
-    //   });
-  });
 
   function onDeleteJob(e) {
-    rows = rows.filter((n) => n.id !== e.id);
+    rows = rows[0].filter((n) => n.id !== e.id);
     setSelected([]);
 
-    // window.location.href = "/#job-list";
-    // var config = {
-    //   headers: {
-    //     "x-auth-token": localStorage.getItem("token"),
-    //   },
-    // };
-    // var req = {
-    //   id: e._id,
-    // };
-    // axios
-    //   .post("/api/list/delete", req, config)
-    //   .then((res) => {})
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    window.location.href = "/#job-list";
+    var config = {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    };
+    var req = {
+      id: e.id,
+    };
+    axios
+      .post("/api/list/delete", req, config)
+      .then((res) => {
+        alert(res.data.message);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setOpen(false);
   }
+  if (localStorage.getItem("type") !== "R") {
+    window.location.href = "/#404";
+  }
+
   //   function fixDate(mydate) {
   //     var oldDate1 = new Date(mydate);
   //     oldDate1 = date.format(oldDate1, " D-MM-YYYY");
   //     return oldDate1;
   //   }
-  let e;
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -397,7 +429,7 @@ export default function EnhancedTable() {
               rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(rows[0], getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   // const isItemSelected = isSelected(row.id);
@@ -430,7 +462,11 @@ export default function EnhancedTable() {
                         {row.title}
                       </TableCell>
                       <TableCell align="center">{row.applicants}</TableCell>
-                      <TableCell align="center">{row.postedOn}</TableCell>
+                      <TableCell align="center">
+                        <Moment format="YYYY-MM-DD hh:mm:ss">
+                          {new Date(row.postedOn)}
+                        </Moment>
+                      </TableCell>
                       <TableCell align="center">{row.accepted}</TableCell>
                       <TableCell align="center">{row.deadline}</TableCell>
                       <TableCell align="center">
@@ -440,11 +476,11 @@ export default function EnhancedTable() {
                           size="small"
                           value="delete"
                           className={classes.actionBut}
-                          onClick={() => onDeleteJob(row)}
+                          onClick={() => handleClickOpen()}
                         >
                           Delete
                         </Button>
-                        <Link to={{ pathname: "/edit", state: { e: e } }}>
+                        <Link to={{ pathname: "/edit", state: { e: row } }}>
                           <Button
                             variant="contained"
                             className={classes.actionBut}
@@ -455,7 +491,19 @@ export default function EnhancedTable() {
                             Edit
                           </Button>
                         </Link>
-                        <Link to={{ pathname: "/appl", state: { e: e } }}>
+                        {row.applicants !== 0 ? (
+                          <Link to={`/appls/${row.id}`} >
+                            <Button
+                              variant="outlined"
+                              className={
+                                classes.applicants && classes.actionBut
+                              }
+                              size="medium"
+                            >
+                              Applicants
+                            </Button>
+                          </Link>
+                        ) : (
                           <Button
                             variant="outlined"
                             className={classes.applicants && classes.actionBut}
@@ -463,7 +511,8 @@ export default function EnhancedTable() {
                           >
                             Applicants
                           </Button>
-                        </Link>
+                        )}
+                        <AlertDialog row={row} />
                       </TableCell>
                     </TableRow>
                   );
