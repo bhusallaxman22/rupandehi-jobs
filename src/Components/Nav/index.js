@@ -170,7 +170,7 @@ export default function NavBar({ LoggedIn, user_type }) {
           <div className={classes.sectionDesktop}>
             <Link to="/my-apps" className={classes.linker}>
               <Tooltip title="Dashboard">
-                <IconButton aria-label="show 4 new mails" color="inherit">
+                <IconButton aria-label="go to dashboard" color="inherit">
                   <Dashboard />
                 </IconButton>
               </Tooltip>
@@ -178,7 +178,7 @@ export default function NavBar({ LoggedIn, user_type }) {
             <Link to="/jobs" className={classes.linker}>
               <Tooltip title="Jobs">
                 <IconButton
-                  aria-label="show 17 new notifications"
+                  aria-label="see job list"
                   color="inherit"
                 >
                   <Search />

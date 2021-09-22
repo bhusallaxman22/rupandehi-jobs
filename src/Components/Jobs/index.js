@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 450,
     // maxHeight: 180,
   },
+
   image: {
     width: 128,
     height: 128,
@@ -63,11 +64,10 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.common.white,
     },
-    marginTop: "10px",
     padding: "2px 4px",
+    display: "flex",
     alignItems: "center",
-    width: "14.6em",
-    maxHeight: "2.5em",
+    width: "300px",
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -117,7 +117,6 @@ export default function Jobs() {
       .post("/api/list/", { cond: { deadline: { $gte: new Date() } } })
       .then((res) => {
         var fixed = fixDate(res.data);
-        console.log(fixed);
         setJobs(fixed);
         setLoading(false);
       })
@@ -172,14 +171,14 @@ export default function Jobs() {
             Recent Job Openings.
           </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <Paper component="form" className={classes.search}>
             <InputBase
               className={classes.input}
               value={search}
               onChange={(e) => onChangeSearch(e)}
-              placeholder="Search for Jobs"
-              inputProps={{ "aria-label": "search google maps" }}
+              placeholder="search jobs by name category location"
+              inputProps={{ "aria-label": "search job list" }}
             />
             <IconButton
               type="submit"
@@ -188,7 +187,7 @@ export default function Jobs() {
             >
               <Search />
             </IconButton>
-          </Paper>
+          </Paper>{" "}
         </Grid>
         {loading ? (
           <Grid item xs={12}>

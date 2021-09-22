@@ -13,29 +13,20 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-// import Checkbox from "@material-ui/core/Checkbox";
+import Fuse from "fuse.js";
 import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Search } from "@material-ui/icons";
+import { InputBase, Grid } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
-
-function createData(id, title, postedOn, applicants, accepted, deadline) {
-  return { id, title, postedOn, applicants, accepted, deadline };
-}
-
-//
-
+import Snack from "../common/snack";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -77,15 +68,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    classes,
-    // onSelectAllClick,
-    order,
-    orderBy,
-    // numSelected,
-    // rowCount,
-    onRequestSort,
-  } = props;
+  const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -93,18 +76,9 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {/* <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all jobs" }}
-          />
-        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            // align={headCell.numeric ? 'left' : 'right'}
             align="center"
             padding={headCell.disablePadding ? "none" : "default"}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -132,7 +106,6 @@ EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -222,6 +195,12 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 750,
   },
+  search: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    width: "210px",
+  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -245,20 +224,29 @@ export default function EnhancedTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("deadline");
-  const [selected, setSelected] = React.useState([]);
+  // const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [jobs, setJobs] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+  const [msg, setMsg] = React.useState("");
+  const [severe, setSevere] = React.useState(false);
+  const [jobs, setJobs] = React.useState([]);
+  const [search, setSearch] = React.useState("");
+  const [searchResult, setSearchResult] = React.useState([]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const fuse = new Fuse(jobs, {
+    keys: ["title"],
+    includeScore: true,
+    threshold: 0.3,
+  });
+
+  const onChangeSearch = (e) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+    setSearchResult(fuse.search(e.target.value));
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
   React.useEffect(() => {
     if (localStorage.getItem("type") !== "R") {
       window.location.href = "/#404";
@@ -272,91 +260,17 @@ export default function EnhancedTable() {
       .get("/api/list/rid", config)
       .then((response) => {
         setJobs(response.data);
-        console.log(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, [jobs.rid]);
 
-  let rows = [
-    jobs.map((job) =>
-      createData(
-        job._id,
-        job.title,
-        job.postedOn,
-        job.curr_app,
-        job.accepted,
-        job.deadline
-      )
-    ),
-  ];
-  console.log("rows", rows);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  function AlertDialog({ row }) {
-    return (
-      <div>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Are You Sure You want to Delete this Job?"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              This will delete the job and all the applications associated with
-              it. This action cannot be undone.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Disagree
-            </Button>
-            <Button onClick={() => onDeleteJob(row)} color="primary" autoFocus>
-              Agree
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-    );
-  }
-  // const handleSelectAllClick = (event) => {
-  //   if (event.target.checked) {
-  //     const newSelecteds = rows.map((n) => n.id);
-  //     setSelected(newSelecteds);
-  //     return;
-  //   }
-  //   setSelected([]);
-  // };
-
-  // const handleClick = (event, id) => {
-  //   const selectedIndex = selected.indexOf(id);
-  //   let newSelected = [];
-
-  //   if (selectedIndex === -1) {
-  //     newSelected = newSelected.concat(selected, id);
-  //   } else if (selectedIndex === 0) {
-  //     newSelected = newSelected.concat(selected.slice(1));
-  //   } else if (selectedIndex === selected.length - 1) {
-  //     newSelected = newSelected.concat(selected.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelected = newSelected.concat(
-  //       selected.slice(0, selectedIndex),
-  //       selected.slice(selectedIndex + 1)
-  //     );
-  //   }
-
-  //   setSelected(newSelected);
-  // };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -370,48 +284,65 @@ export default function EnhancedTable() {
     setDense(event.target.checked);
   };
 
-  // const isSelected = (id) => selected.indexOf(id) !== -1;
-
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, jobs.length - page * rowsPerPage);
 
   function onDeleteJob(e) {
-    rows = rows[0].filter((n) => n.id !== e.id);
-    setSelected([]);
+    // jobs = jobs.filter((n) => n.id !== e.id);
+    // setSelected([]);
 
-    window.location.href = "/#job-list";
+    // window.location.href = "/#job-list";
     var config = {
       headers: {
         "x-auth-token": localStorage.getItem("token"),
       },
     };
     var req = {
-      id: e.id,
+      id: e,
     };
+    console.log(e.title);
     axios
       .post("/api/list/delete", req, config)
       .then((res) => {
-        alert(res.data.message);
-        window.location.reload();
+        setOpen(true);
+        setMsg("Job deleted");
+        setSevere("success");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       })
       .catch((err) => {
         console.log(err);
       });
-    setOpen(false);
   }
+
   if (localStorage.getItem("type") !== "R") {
     window.location.href = "/#404";
   }
 
-  //   function fixDate(mydate) {
-  //     var oldDate1 = new Date(mydate);
-  //     oldDate1 = date.format(oldDate1, " D-MM-YYYY");
-  //     return oldDate1;
-  //   }
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <Grid item>
+          <Paper component="form" className={classes.search}>
+            <InputBase
+              className={classes.input}
+              value={search}
+              onChange={(e) => onChangeSearch(e)}
+              onSubmit={(e) => e.preventDefault()}
+              placeholder="search jobs by name"
+              inputProps={{ "aria-label": "search job list" }}
+            />
+            <IconButton
+              type="submit"
+              className={classes.iconButton}
+              aria-label="search"
+            >
+              <Search />
+            </IconButton>
+          </Paper>{" "}
+        </Grid>
+        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
           <Table
             className={classes.table}
@@ -421,37 +352,30 @@ export default function EnhancedTable() {
           >
             <EnhancedTableHead
               classes={classes}
-              numSelected={selected.length}
+              // numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              // onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={jobs.length}
             />
             <TableBody>
-              {stableSort(rows[0], getComparator(order, orderBy))
+              {stableSort(
+                searchResult.length > 0
+                  ? searchResult.map((job) => job.item)
+                  : jobs,
+                getComparator(order, orderBy)
+              )
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  // const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
-                      // component={Paper}
                       hover
-                      // onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
-                      // aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={`${Math.random() + row.title}`}
-                      // selected={isItemSelected}
+                      key={`${row._id}`}
                     >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell> */}
                       <TableCell
                         component="th"
                         id={labelId}
@@ -459,9 +383,9 @@ export default function EnhancedTable() {
                         padding="none"
                         align="center"
                       >
-                        {row.title}
+                        <Link to={`/jobs/${row._id}`}>{row.title}</Link>
                       </TableCell>
-                      <TableCell align="center">{row.applicants}</TableCell>
+                      <TableCell align="center">{row.curr_app}</TableCell>
                       <TableCell align="center">
                         <Moment format="YYYY-MM-DD hh:mm:ss">
                           {new Date(row.postedOn)}
@@ -476,7 +400,7 @@ export default function EnhancedTable() {
                           size="small"
                           value="delete"
                           className={classes.actionBut}
-                          onClick={() => handleClickOpen()}
+                          onClick={() => onDeleteJob(row)}
                         >
                           Delete
                         </Button>
@@ -491,8 +415,8 @@ export default function EnhancedTable() {
                             Edit
                           </Button>
                         </Link>
-                        {row.applicants !== 0 ? (
-                          <Link to={`/appls/${row.id}`} >
+                        {row.curr_app !== 0 ? (
+                          <Link to={`/appls/${row._id}`}>
                             <Button
                               variant="outlined"
                               className={
@@ -509,10 +433,9 @@ export default function EnhancedTable() {
                             className={classes.applicants && classes.actionBut}
                             size="medium"
                           >
-                            Applicants
+                            No Applicants
                           </Button>
                         )}
-                        <AlertDialog row={row} />
                       </TableCell>
                     </TableRow>
                   );
@@ -528,12 +451,13 @@ export default function EnhancedTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, 50, 100]}
           component="div"
-          count={rows.length}
+          count={searchResult.length > 0 ? searchResult.length : jobs.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
+        <Snack open={open} message={msg} severity={severe} />
       </Paper>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}

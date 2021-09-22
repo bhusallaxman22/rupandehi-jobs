@@ -37,7 +37,8 @@ function App() {
 
   const theme = useMemo(
     () =>
-      createTheme({
+      createTheme
+      ({
         palette: {
           type: prefersDarkMode ? "dark" : "light",
         },
@@ -68,6 +69,7 @@ function App() {
         })
         .catch((error) => {
           console.log(error);
+          localStorage.clear()
         });
     }
   }, [LoggedIn, userType]);

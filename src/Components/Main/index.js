@@ -55,7 +55,6 @@ export default function Main() {
       .post("/api/list/", { cond: { deadline: { $gte: new Date() } } })
       .then((res) => {
         var fixed = fixDate(res.data);
-        console.log(fixed);
         setJobs(fixed);
         setLoading(false);
       })

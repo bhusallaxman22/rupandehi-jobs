@@ -125,7 +125,7 @@ export default function JobCard({ jobs, error, loading, errorMessage }) {
           <Grid item xs={12}>
             <Paper className={classes.paper}>
               <Typography variant="h5" component="h3">
-                No jobs available
+                No Current Job Opening
               </Typography>
             </Paper>
           </Grid>
@@ -162,7 +162,7 @@ export default function JobCard({ jobs, error, loading, errorMessage }) {
                       <img
                         className={classes.img}
                         alt="complex"
-                        src={"/assets/images/rupandehi.jpg"}
+                        src={"/assets/images/rupandehi.svg"}
                       />
                     </ButtonBase>
                   </Grid>
@@ -241,7 +241,6 @@ export default function JobCard({ jobs, error, loading, errorMessage }) {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={pageSize}
-              autoFocus
               onChange={handlePageSizeChange}
             >
               <MenuItem value={3}>3</MenuItem>

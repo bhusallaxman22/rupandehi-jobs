@@ -53,7 +53,6 @@ function MyApplications(props) {
       .then((response) => {
         setApps(response.data);
         setLoading(false);
-        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);

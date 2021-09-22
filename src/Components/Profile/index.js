@@ -83,8 +83,6 @@ export default function Profile() {
     window.location.href = "/#get-info";
   }
 
-  console.log(user);
-  console.log(edu);
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;

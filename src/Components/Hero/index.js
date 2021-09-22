@@ -54,8 +54,8 @@ export default function Hero({ search, onChangeSearch }) {
                   className={classes.input}
                   value={search}
                   onChange={(e) => onChangeSearch(e)}
-                  placeholder="Search for Jobs"
-                  inputProps={{ "aria-label": "search google maps" }}
+                  placeholder="search jobs by name category location"
+                  inputProps={{ "aria-label": "search job list" }}
                 />
                 <IconButton
                   type="submit"

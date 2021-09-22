@@ -21,6 +21,7 @@ const StyledContainerMobile = styled(Paper)`
   justify-content: space-between;
   padding: 1.25em 5%;
 
+
   & .checkbox {
     display: none;
   }
@@ -114,7 +115,7 @@ const Nav = () => {
   ));
 
   return (
-    <Box>
+    <Box style={{marginBottom:"60px"}}>
       <GlobalStyle />
       <StyledContainerMobile>
         <FormattedIcons name={name} />

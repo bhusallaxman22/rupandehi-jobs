@@ -284,13 +284,11 @@ export default function GetInfo() {
   const handleChipData = (e) => {
     e.preventDefault();
     const newChip = [...chipData, skill];
-    console.log(newChip);
     setChipData(newChip);
     setSkill("");
   };
   const handleChipData1 = () => {
     const newChip = [...chipData1, special];
-    console.log(newChip);
     setChipData1(newChip);
     setSpecial("");
   };
@@ -363,7 +361,6 @@ export default function GetInfo() {
     await axios
       .post("/api/user/profile", data, config)
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           setName("");
           setEmail("");

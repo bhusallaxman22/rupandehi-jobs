@@ -128,21 +128,12 @@ function AddJob() {
       .then((res) => {
         if (res.status === 200) {
           console.log("Job added successfully");
-          setJobTitle("");
-          setJobRequirements("");
-          setJobApplicantsNo("");
-          setJobExperience("");
-          setJobSalary("");
-          setChipData([]);
-          setJobLocation("");
-          setJobApplyNote("");
-          setJobEduLevel("");
-          setJobLevel("");
-          setJobCategory("");
-          setJobDeadline("");
           setOpen(true);
           setSnackMessage("Job added successfully");
           setSever("success");
+          setTimeout(() => {
+            window.location.reload()
+          }, 2000);
         }
       })
       .catch((err) => {

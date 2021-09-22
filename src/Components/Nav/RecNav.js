@@ -7,7 +7,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import MoreIcon from "@material-ui/icons/MoreVert";
 // import { Logo } from "./icons";
-import { ButtonBase } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { AddOutlined, Dashboard, PowerSettingsNew } from "@material-ui/icons";
 import Search from "@material-ui/icons/AssignmentInd";
@@ -47,9 +46,8 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
   img: {
-    width: "auto",
+    // width: "auto",
     height: "50px",
-    borderRadius: "50%",
   },
 }));
 
@@ -115,6 +113,7 @@ export default function RecNav() {
         </MenuItem>
       </Link>
       <Link to="/add-job" className={classes.linker}>
+        <MenuItem>
         <IconButton
           edge="end"
           aria-label="account of current user"
@@ -123,6 +122,8 @@ export default function RecNav() {
         >
           <AddOutlined />
         </IconButton>
+        <p>Add Job</p>
+      </MenuItem>
       </Link>
       <MenuItem onClick={handleLogout}>
         <IconButton aria-label="logout" color="inherit">
@@ -135,7 +136,7 @@ export default function RecNav() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar color="textSecondary" position="static">
         <Toolbar>
           <IconButton
             edge="start"
@@ -144,13 +145,13 @@ export default function RecNav() {
             aria-label="open drawer"
           >
             <Link to="/" className={classes.linker}>
-              <ButtonBase className={classes.image}>
-                <img
-                  className={classes.img}
-                  alt="complex"
-                  src={"assets/images/rupandehijob.jpg"}
-                />
-              </ButtonBase>{" "}
+              {/* <ButtonBase className={classes.image}> */}
+              <img
+                className={classes.img}
+                alt="complex"
+                src={"assets/images/rupandehi.svg"}
+              />
+              {/* </ButtonBase>{" "} */}
             </Link>
           </IconButton>
           <div className={classes.grow} />

@@ -4,6 +4,7 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import { useHistory } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import {
   Box,
@@ -29,6 +30,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Moment from "react-moment";
 import Snack from "../common/snack";
+import moment from "moment";
 
 const useStyles = makeStyles({
   root: {
@@ -50,7 +52,7 @@ const useStyles = makeStyles({
 export default function JobDescription() {
   const classes = useStyles();
   const params = useParams();
-
+  const history = useHistory();
   const [open1, setOpen1] = React.useState(false);
   const [job, setJob] = React.useState({});
   const [loading, setLoading] = React.useState(true);
@@ -82,7 +84,6 @@ export default function JobDescription() {
       .then((res) => {
         setJob(res.data);
         setLoading(false);
-        console.log(res.data);
       })
       .catch((err) => {
         setError(true);
@@ -93,6 +94,7 @@ export default function JobDescription() {
       .then((res) => {
         setMyApplications(res.data);
       });
+
   }, [params.id]);
 
   const handleClickOpen = () => {
@@ -128,17 +130,19 @@ export default function JobDescription() {
     axios
       .post("/api/appl/add", req, config)
       .then((response) => {
-        console.log(response);
-        setSnackMessage("Application sent successfully");
+        setSnackMessage("Job Applied successfully");
         setSever("success");
         setOpen(true);
         window.location.reload();
       })
       .catch((err) => {
-        if (err.response.data) {
-          setSnackMessage("Error Applying" + err.response.data);
+        if (err.response.status === 401) {
+          setSnackMessage("You're not Logged In, Please login to continue!");
           setSever("error");
           setOpen(true);
+          setTimeout(() => {
+            history.push("/login");
+          }, 3000);
         }
       });
     setOpen1(false);
@@ -282,7 +286,7 @@ export default function JobDescription() {
           <CardActionArea>
             <CardMedia
               className={classes.media}
-              image="/assets/images/rupandehijob.jpg"
+              image="/assets/images/rupandehi.svg"
               title="rupandehi job"
             />
             <CardContent>
@@ -290,8 +294,9 @@ export default function JobDescription() {
                 A Reputed Company
               </Typography>
               <Typography variant="body2" color="textSecondary" component="p">
-                Lizards are a widespread group of squamate reptiles, with over
-                6,000 species, ranging across all continents except Antarctica
+                A Reputed Company is looking for a great candidate to join the team.
+                The job is for a {job.title}. <br />The job description is below.
+                Rupandehi Job urges eligible candidates to apply for this job.<br />
               </Typography>
             </CardContent>
           </CardActionArea>
@@ -317,7 +322,12 @@ export default function JobDescription() {
                     component="span"
                   >
                     Deadline:
-                    <Moment durationFromNow>{job.deadline}</Moment>
+                    <Moment durationFromNow>{job.deadline}</Moment> 
+                    {job.deadline<moment(Date()).format("YYYY-MM-DD") ? (
+                      <Typography component="strong" color="secondary" variant="h6"> ago. expired</Typography>
+                    ) : (
+                      ""
+                    )}
                   </Typography>
                   <TableContainer component={Paper}>
                     <Table>
@@ -326,9 +336,7 @@ export default function JobDescription() {
                           <TableCell width="33%">Job Category</TableCell>
                           <TableCell width="3%">:</TableCell>
                           <TableCell width="64%">
-                            <Link href="#">
-                              {job.category}
-                            </Link>
+                            <Link href="#">{job.category}</Link>
                           </TableCell>
                         </TableRow>
                         <TableRow>
@@ -376,7 +384,11 @@ export default function JobDescription() {
                               {job.deadline}
                             </Moment>
                             <Divider orientation="vertical" />
-                            <Moment durationFromNow>{job.deadline}</Moment>
+                            {job.deadline<moment(Date()).format("YYYY-MM-DD") ? (
+                      <Typography component="strong" color="secondary" > expired</Typography>
+                    ) : (
+                      ""
+                    )}
                           </TableCell>
                         </TableRow>
                       </tbody>
@@ -452,13 +464,13 @@ export default function JobDescription() {
                         </Typography>
                       </CardContent>
                       <CardContent>
-                          <Typography>
-                            <strong>Requirements</strong>
-                          </Typography>
-                            <div
-                              itemProp="requirements"
-                              dangerouslySetInnerHTML={renderRequirement()}
-                            />
+                        <Typography>
+                          <strong>Requirements</strong>
+                        </Typography>
+                        <div
+                          itemProp="requirements"
+                          dangerouslySetInnerHTML={renderRequirement()}
+                        />
                       </CardContent>
                     </Container>
                   </CardContent>
